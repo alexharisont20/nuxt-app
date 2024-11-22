@@ -2,6 +2,7 @@
 // noinspection JSUnusedLocalSymbols
 
 import { Context, Plugin } from '@nuxt/types'
+import qs from 'qs'
 import { getCategories, getCategoryBySlug } from '~/fake-server/endpoints/categories'
 import { IFilterValues, IListOptions } from '~/interfaces/list'
 import { IProduct, IProductsList } from '~/interfaces/product'
@@ -57,11 +58,11 @@ function make (context: Context) {
              * where:
              * - 2 = options.depth
              */
-            // return fetch(`https://example.com/api/categories.json?${qs.stringify(options)}`)
-            //     .then((response) => response.json());
+            return fetch(`http://localhost/api/categories?${qs.stringify(options)}`)
+                .then(response => response.json())
 
             // This is for demonstration purposes only. Remove it and use the code above.
-            return getCategories(options)
+            // return getCategories(options)
         },
         /**
          * Returns category by slug.

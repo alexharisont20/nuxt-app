@@ -17,7 +17,7 @@
                     ]"
                 >
                     <div class="block-slideshow__body">
-                        <Carousel>
+                        <Carousel v-if="slides.length">
                             <CarouselSlide v-for="(slide, index) in slides" :key="index">
                                 <AppLink class="block-slideshow__slide" to="/">
                                     <div
@@ -51,7 +51,7 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Getter, Action } from 'vuex-class'
 import { ILanguage } from '~/interfaces/language'
 import departments from '~/services/departments'
 import Carousel from '~/components/shared/carousel.vue'
@@ -79,63 +79,15 @@ interface Slide {
 export default class BlockSlideshow extends Vue {
     @Prop({ type: String, default: () => 'full' }) readonly layout!: BlockSlideshowLayout
     @Getter('locale/language') language!: ILanguage
-
-    slides: Slide[] = [
-        {
-            title: 'Big choice of<br>Plumbing products',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-            imageClassic: {
-                ltr: '/images/slides/slide-1-ltr.jpg',
-                rtl: '/images/slides/slide-1-rtl.jpg'
-            },
-            imageFull: {
-                ltr: '/images/slides/slide-1-full-ltr.jpg',
-                rtl: '/images/slides/slide-1-full-rtl.jpg'
-            },
-            imageMobile: {
-                ltr: '/images/slides/slide-1-mobile.jpg',
-                rtl: '/images/slides/slide-1-mobile.jpg'
-            }
-        },
-        {
-            title: 'Screwdrivers<br>Professional Tools',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-            imageClassic: {
-                ltr: '/images/slides/slide-2-ltr.jpg',
-                rtl: '/images/slides/slide-2-rtl.jpg'
-            },
-            imageFull: {
-                ltr: '/images/slides/slide-2-full-ltr.jpg',
-                rtl: '/images/slides/slide-2-full-rtl.jpg'
-            },
-            imageMobile: {
-                ltr: '/images/slides/slide-2-mobile.jpg',
-                rtl: '/images/slides/slide-2-mobile.jpg'
-            }
-        },
-        {
-            title: 'One more<br>Unique header',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Etiam pharetra laoreet dui quis molestie.',
-            imageClassic: {
-                ltr: '/images/slides/slide-3-ltr.jpg',
-                rtl: '/images/slides/slide-3-rtl.jpg'
-            },
-            imageFull: {
-                ltr: '/images/slides/slide-3-full-ltr.jpg',
-                rtl: '/images/slides/slide-3-full-rtl.jpg'
-            },
-            imageMobile: {
-                ltr: '/images/slides/slide-3-mobile.jpg',
-                rtl: '/images/slides/slide-3-mobile.jpg'
-            }
-        }
-    ]
+    @Getter('slides/slides') slides!: Slide[] // Vuex getter to fetch slides
+    @Action('slides/fetchSlides') fetchSlides!: () => Promise<void> // Vuex action to fetch slides
 
     get direction () {
         return this.language.direction
     }
 
     mounted () {
+        this.fetchSlides() // Fetch slides when the component is mounted
         departments.set(this.$el)
     }
 
