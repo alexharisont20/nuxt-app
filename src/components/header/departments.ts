@@ -1,4 +1,5 @@
 import { Vue, Component } from 'vue-property-decorator'
+import { Getter, Action } from 'vuex-class'
 import { INav, INavLink } from '~/interfaces/menus/nav'
 import departments from '~/services/departments'
 import AppLink from '~/components/shared/app-link.vue'
@@ -14,11 +15,14 @@ import dataHeaderDepartments from '~/data/headerDepartments'
 })
 export default class Departments extends Vue {
     hoveredItem: INavLink | null = null
-    items: INav = dataHeaderDepartments
+    // items: INav = dataHeaderDepartments
     isOpen: boolean = false
     isTransition: boolean = false
     fixed: boolean = false
     sticky: boolean = false
+
+    @Getter('departments/categories') items!: INav // Vuex getter to fetch slides
+    @Action('departments/fetchCategories') fetchItems!: () => Promise<void> // Vuex action to fetch slides
 
     get itemElements () {
         return this.$refs.items as HTMLDivElement[] || []
@@ -28,7 +32,8 @@ export default class Departments extends Vue {
         return this.$refs.submenus as HTMLDivElement[] || []
     }
 
-    mounted () {
+    mounted() {
+        this.fetchItems()
         departments.watch(this.onSetArea)
 
         const content = this.$refs.content as HTMLElement
