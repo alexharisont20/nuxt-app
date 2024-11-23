@@ -4,6 +4,10 @@
             <slot />
         </div>
         <div class="swiper-pagination" />
+        <template v-if="options.navigation">
+            <div class="swiper-button-prev" />
+            <div class="swiper-button-next" />
+        </template>
     </div>
 </template>
 

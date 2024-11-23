@@ -17,7 +17,15 @@
                     ]"
                 >
                     <div class="block-slideshow__body">
-                        <Carousel v-if="slides.length">
+                        <Carousel
+                            v-if="slides.length"
+                            :options="{
+                                navigation: {
+                                    nextEl: '.swiper-button-next',
+                                    prevEl: '.swiper-button-prev'
+                                }
+                            }"
+                        >
                             <CarouselSlide v-for="(slide, index) in slides" :key="index">
                                 <AppLink class="block-slideshow__slide" to="/">
                                     <div

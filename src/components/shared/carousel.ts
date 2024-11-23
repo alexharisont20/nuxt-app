@@ -1,10 +1,10 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { Swiper, Pagination } from 'swiper'
+import { Swiper, Autoplay, Pagination, Navigation } from 'swiper'
 import { SwiperOptions } from 'swiper/types/swiper-options'
 import { IDirection } from '~/interfaces/language'
 
-Swiper.use([Pagination])
+Swiper.use([Autoplay, Pagination, Navigation])
 
 @Component
 export default class Carousel extends Vue {
@@ -24,7 +24,10 @@ export default class Carousel extends Vue {
                 el: '.swiper-pagination',
                 clickable: true
             },
-            watchOverflow: true
+            watchOverflow: true,
+            autoplay: {
+                delay: 2000
+            }
         }, this.options))
     }
 }
