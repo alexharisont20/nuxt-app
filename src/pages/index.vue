@@ -4,6 +4,12 @@
 
         <BlockFeatures />
 
+        <template v-if="sections.length">
+            <div v-for="(section, index) in sections" :key="index">
+                <div>Section</div>
+            </div>
+        </template>
+
         <BlockProductsCarouselContainer
             v-slot="{ products, isLoading, tabs, handleTabChange }"
             :tabs="[
@@ -145,6 +151,8 @@ async function loadColumns (shopApi: ShopApi) {
     }
 })
 export default class HomePageOne extends Vue {
+    sections: any = []
+
     featuredProducts: IProduct[] | null = []
 
     bestsellers: IProduct[] | null = []
@@ -157,7 +165,9 @@ export default class HomePageOne extends Vue {
 
     columns: BlockProductColumnsItem[] | null = []
 
-    mounted () {
+    mounted() {
+        this.fetchSections()
+
         if (this.bestsellers === null) {
             this.$shopApi.getPopularProducts({ limit: 7 }).then((products) => {
                 this.bestsellers = products
@@ -167,6 +177,16 @@ export default class HomePageOne extends Vue {
             loadColumns(this.$shopApi).then((columns) => {
                 this.columns = columns
             })
+        }
+    }
+
+    async fetchSections() {
+        try {
+            const response = await fetch('http://localhost/api/sections');
+            this.sections = await response.json(); // Resolving the promise
+            console.log(this.sections); // Now it will be an array (if API returns an array)
+        } catch (error) {
+            console.error('Error fetching sections:', error);
         }
     }
 

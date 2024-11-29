@@ -1,5 +1,4 @@
 import { Vue, Component } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
 import { INav, INavLink } from '~/interfaces/menus/nav'
 import departments from '~/services/departments'
 import AppLink from '~/components/shared/app-link.vue'
@@ -21,8 +20,7 @@ export default class Departments extends Vue {
     fixed: boolean = false
     sticky: boolean = false
 
-    @Getter('departments/categories') items!: INav // Vuex getter to fetch slides
-    @Action('departments/fetchCategories') fetchItems!: () => Promise<void> // Vuex action to fetch slides
+    items: INav = []
 
     get itemElements () {
         return this.$refs.items as HTMLDivElement[] || []
@@ -33,13 +31,44 @@ export default class Departments extends Vue {
     }
 
     mounted() {
-        this.fetchItems()
+        this.fetchCategories()
         departments.watch(this.onSetArea)
 
         const content = this.$refs.content as HTMLElement
 
         content.addEventListener('transitionend', this.onTransitionEnd)
         document.addEventListener('click', this.onGlobalClick)
+    }
+
+    async fetchCategories() {
+        const url = (category: { slug: string }) => ('/shop/category-grid-4-columns-full?category=' + category.slug)
+
+        const withChildren = (categories: any[]): any => categories.map(category => ({
+            title: category.name,
+            url: url(category),
+            children: category.childrens.length ? withChildren(category.childrens) : null
+        }))
+
+        const withMenu = (categories: any[]): INav => categories.map(category => ({
+            title: category.name,
+            url: url(category),
+            submenu: category.childrens.length
+                ? {
+                    type: 'menu',
+                    menu: withChildren(category.childrens)
+                }
+                : undefined
+        }))
+
+        try {
+            const response = await fetch('http://localhost/api/categories?nested=true') // Replace with your API endpoint
+            if (!response.ok) {
+                throw new Error(`Failed to fetch categories: ${response.statusText}`)
+            }
+            this.items = withMenu(await response.json())
+        } catch (error) {
+            console.error('Failed to fetch categories:', error)
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols

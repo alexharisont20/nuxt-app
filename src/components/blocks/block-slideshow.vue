@@ -59,7 +59,7 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class'
+import { Getter } from 'vuex-class'
 import { ILanguage } from '~/interfaces/language'
 import departments from '~/services/departments'
 import Carousel from '~/components/shared/carousel.vue'
@@ -87,8 +87,8 @@ interface Slide {
 export default class BlockSlideshow extends Vue {
     @Prop({ type: String, default: () => 'full' }) readonly layout!: BlockSlideshowLayout
     @Getter('locale/language') language!: ILanguage
-    @Getter('slides/slides') slides!: Slide[] // Vuex getter to fetch slides
-    @Action('slides/fetchSlides') fetchSlides!: () => Promise<void> // Vuex action to fetch slides
+
+    slides: Slide[] = [] // Vuex getter to fetch slides
 
     get direction () {
         return this.language.direction
@@ -97,6 +97,18 @@ export default class BlockSlideshow extends Vue {
     mounted () {
         this.fetchSlides() // Fetch slides when the component is mounted
         departments.set(this.$el)
+    }
+
+    async fetchSlides () {
+        try {
+            const response = await fetch('http://localhost/api/slides') // Replace with your API endpoint
+            if (!response.ok) {
+                throw new Error(`Failed to fetch slides: ${response.statusText}`)
+            }
+            this.slides = await response.json()
+        } catch (error) {
+            console.error('Failed to fetch slides:', error)
+        }
     }
 
     beforeDestroy () {
