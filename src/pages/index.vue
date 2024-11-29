@@ -4,11 +4,56 @@
 
         <BlockFeatures />
 
-        <template v-if="sections.length">
-            <div v-for="(section, index) in sections" :key="index">
-                <div>Section</div>
+        <div v-for="(section, index) in sections" :key="index">
+            <BlockProductsCarouselContainer
+                v-if="section.type == 'carousel-grid'"
+                v-slot="{ products, isLoading, tabs, handleTabChange }"
+                :tabs="section.categories"
+                :initial-data="section.products"
+                :data-source="sectionProductsSource"
+            >
+                <BlockProductsCarousel
+                    :title="section.title"
+                    :layout="`grid-${section.data.cols}`"
+                    :rows="parseInt(section.data.rows)"
+                    :products="products"
+                    :loading="isLoading"
+                    :groups="tabs"
+                    @groupClick="handleTabChange"
+                />
+            </BlockProductsCarouselContainer>
+            <div
+                v-else-if="section.type == 'pure-grid'"
+                class="container products-view"
+            >
+                <BlockHeader
+                    :title="section.title"
+                    :groups="section.categories"
+                    arrows
+                    @next="()=>{}"
+                    @prev="()=>{}"
+                    @group-click="$emit('groupClick', $event)"
+                />
+                <div class="products-view__content">
+                    <div
+                        class="products-view__list products-list"
+                        data-layout="grid-4-full"
+                        :data-with-features="true"
+                        :data-mobile-grid-columns="2"
+                    >
+                        <div class="products-list__body">
+                            <div
+                                v-for="product in section.products"
+                                :key="product.id"
+                                class="products-list__item"
+                            >
+                                <ProductCard :product="product" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </template>
+        </div>
 
         <BlockProductsCarouselContainer
             v-slot="{ products, isLoading, tabs, handleTabChange }"
@@ -68,11 +113,7 @@
             />
         </BlockProductsCarouselContainer>
 
-        <BlockPosts
-            title="Latest News"
-            layout="list"
-            :posts="posts"
-        />
+        <BlockPosts title="Latest News" layout="list" :posts="posts" />
 
         <BlockBrands />
 
@@ -81,38 +122,39 @@
 </template>
 
 <script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import { Context } from "@nuxt/types";
+import { runOnlyOnServer } from "~/services/helpers";
+import { IProduct } from "~/interfaces/product";
+import { ICategory } from "~/interfaces/category";
+import { IPost } from "~/interfaces/post";
+import { BlockProductColumnsItem } from "~/interfaces/components";
+import { ShopApi } from "~/api/shop";
+import ProductCard from "~/components/shared/product-card.vue";
+import BlockSlideshow from "~/components/blocks/block-slideshow.vue";
+import BlockFeatures from "~/components/blocks/block-features.vue";
+import BlockProductsCarousel from "~/components/blocks/block-products-carousel.vue";
+import BlockProductsCarouselContainer from "~/components/blocks/block-products-carousel-container.vue";
+import BlockBanner from "~/components/blocks/block-banner.vue";
+import BlockProducts from "~/components/blocks/block-products.vue";
+import BlockCategories from "~/components/blocks/block-categories.vue";
+import BlockPosts from "~/components/blocks/block-posts.vue";
+import BlockBrands from "~/components/blocks/block-brands.vue";
+import BlockProductColumns from "~/components/blocks/block-product-columns.vue";
+import dataShopBlockCategories from "~/data/shopBlockCategories";
+import dataBlogPosts from "~/data/blogPosts";
+import BlockHeader from "~/components/shared/block-header.vue";
 
-import { Vue, Component } from 'vue-property-decorator'
-import { Context } from '@nuxt/types'
-import { runOnlyOnServer } from '~/services/helpers'
-import { IProduct } from '~/interfaces/product'
-import { ICategory } from '~/interfaces/category'
-import { IPost } from '~/interfaces/post'
-import { BlockProductColumnsItem } from '~/interfaces/components'
-import { ShopApi } from '~/api/shop'
-import BlockSlideshow from '~/components/blocks/block-slideshow.vue'
-import BlockFeatures from '~/components/blocks/block-features.vue'
-import BlockProductsCarousel from '~/components/blocks/block-products-carousel.vue'
-import BlockProductsCarouselContainer from '~/components/blocks/block-products-carousel-container.vue'
-import BlockBanner from '~/components/blocks/block-banner.vue'
-import BlockProducts from '~/components/blocks/block-products.vue'
-import BlockCategories from '~/components/blocks/block-categories.vue'
-import BlockPosts from '~/components/blocks/block-posts.vue'
-import BlockBrands from '~/components/blocks/block-brands.vue'
-import BlockProductColumns from '~/components/blocks/block-product-columns.vue'
-import dataShopBlockCategories from '~/data/shopBlockCategories'
-import dataBlogPosts from '~/data/blogPosts'
-
-async function loadColumns (shopApi: ShopApi) {
-    const topRated = shopApi.getTopRatedProducts({ limit: 3 })
-    const specialOffers = shopApi.getDiscountedProducts({ limit: 3 })
-    const bestsellers = shopApi.getPopularProducts({ limit: 3 })
+async function loadColumns(shopApi: ShopApi) {
+    const topRated = shopApi.getTopRatedProducts({ limit: 3 });
+    const specialOffers = shopApi.getDiscountedProducts({ limit: 3 });
+    const bestsellers = shopApi.getPopularProducts({ limit: 3 });
 
     return [
-        { title: 'Top Rated Products', products: await topRated },
-        { title: 'Special Offers', products: await specialOffers },
-        { title: 'Bestsellers', products: await bestsellers }
-    ]
+        { title: "Top Rated Products", products: await topRated },
+        { title: "Special Offers", products: await specialOffers },
+        { title: "Bestsellers", products: await bestsellers }
+    ];
 }
 
 @Component({
@@ -126,77 +168,104 @@ async function loadColumns (shopApi: ShopApi) {
         BlockCategories,
         BlockPosts,
         BlockBrands,
-        BlockProductColumns
+        BlockProductColumns,
+        BlockHeader,
+        ProductCard
     },
-    async asyncData (context: Context) {
-        context.store.commit('options/setHeaderLayout', 'default')
-        context.store.commit('options/setDropcartType', 'dropdown')
+    async asyncData(context: Context) {
+        context.store.commit("options/setHeaderLayout", "default");
+        context.store.commit("options/setDropcartType", "dropdown");
 
-        const featuredProducts = runOnlyOnServer(() => context.$shopApi.getFeaturedProducts({ limit: 8 }), null)
-        const bestsellers = runOnlyOnServer(() => context.$shopApi.getPopularProducts({ limit: 7 }), null)
-        const latestProducts = runOnlyOnServer(() => context.$shopApi.getLatestProducts({ limit: 8 }), null)
-        const columns = runOnlyOnServer(() => loadColumns(context.$shopApi), null)
+        const featuredProducts = runOnlyOnServer(
+            () => context.$shopApi.getFeaturedProducts({ limit: 8 }),
+            null
+        );
+        const bestsellers = runOnlyOnServer(
+            () => context.$shopApi.getPopularProducts({ limit: 7 }),
+            null
+        );
+        const latestProducts = runOnlyOnServer(
+            () => context.$shopApi.getLatestProducts({ limit: 8 }),
+            null
+        );
+        const columns = runOnlyOnServer(
+            () => loadColumns(context.$shopApi),
+            null
+        );
+
+        const sections = runOnlyOnServer(() => {
+            return fetch("http://localhost/api/sections")
+                .then(response => response.json())
+                .catch(error => {
+                    console.error("Error fetching sections:", error);
+                    return [];
+                });
+        }, []);
 
         return {
+            sections: await sections,
             featuredProducts: await featuredProducts,
             bestsellers: await bestsellers,
             latestProducts: await latestProducts,
             columns: await columns
-        }
+        };
     },
-    head () {
+    head() {
         return {
-            title: 'Home Page One'
-        }
+            title: "Home Page One"
+        };
     }
 })
 export default class HomePageOne extends Vue {
-    sections: any = []
+    featuredProducts: IProduct[] | null = [];
 
-    featuredProducts: IProduct[] | null = []
+    bestsellers: IProduct[] | null = [];
 
-    bestsellers: IProduct[] | null = []
+    categories: ICategory[] = dataShopBlockCategories;
 
-    categories: ICategory[] = dataShopBlockCategories
+    latestProducts: IProduct[] | null = [];
 
-    latestProducts: IProduct[] | null = []
+    posts: IPost[] = dataBlogPosts;
 
-    posts: IPost[] = dataBlogPosts
-
-    columns: BlockProductColumnsItem[] | null = []
+    columns: BlockProductColumnsItem[] | null = [];
 
     mounted() {
-        this.fetchSections()
-
         if (this.bestsellers === null) {
-            this.$shopApi.getPopularProducts({ limit: 7 }).then((products) => {
-                this.bestsellers = products
-            })
+            this.$shopApi.getPopularProducts({ limit: 7 }).then(products => {
+                this.bestsellers = products;
+            });
         }
         if (this.columns === null) {
-            loadColumns(this.$shopApi).then((columns) => {
-                this.columns = columns
-            })
+            loadColumns(this.$shopApi).then(columns => {
+                this.columns = columns;
+            });
         }
     }
 
-    async fetchSections() {
-        try {
-            const response = await fetch('http://localhost/api/sections');
-            this.sections = await response.json(); // Resolving the promise
-            console.log(this.sections); // Now it will be an array (if API returns an array)
-        } catch (error) {
-            console.error('Error fetching sections:', error);
-        }
+    featuredProductsSource(tab: { categorySlug: string }): Promise<IProduct[]> {
+        return this.$shopApi.getFeaturedProducts({
+            limit: 8,
+            category: tab.categorySlug
+        });
     }
 
-    featuredProductsSource (tab: {categorySlug: string}): Promise<IProduct[]> {
-        return this.$shopApi.getFeaturedProducts({ limit: 8, category: tab.categorySlug })
+    latestProductsSource(tab: { categorySlug: string }): Promise<IProduct[]> {
+        return this.$shopApi.getLatestProducts({
+            limit: 8,
+            category: tab.categorySlug
+        });
     }
 
-    latestProductsSource (tab: {categorySlug: string}): Promise<IProduct[]> {
-        return this.$shopApi.getLatestProducts({ limit: 8, category: tab.categorySlug })
+    sectionProductsSource (tab: {sectionId: string, id: number}): Promise<IProduct[]> {
+        console.log(tab)
+        return fetch(
+            `http://localhost/api/sections/${tab.sectionId}/products?category=${tab.id}`
+        )
+            .then(response => response.json())
+            .catch(error => {
+                console.error("Error fetching section products:", error);
+                return [];
+            });
     }
 }
-
 </script>

@@ -9,20 +9,20 @@
 
     .product-card__image {
         flex-shrink: 0;
-        padding: 24px;
+        padding: 1px;
         width: 210px;
     }
     .product-card__info {
-        padding: 20px 0;
+        padding: 10px 0;
 
         @include direction {
             #{$padding-inline-start}: 0;
-            #{$padding-inline-end}: 20px;
+            #{$padding-inline-end}: 10px;
         }
     }
     .product-card__name {
         font-size: 16px;
-        line-height: 20px;
+        line-height: 10px;
         flex-grow: 0;
     }
     .product-card__rating {
@@ -109,14 +109,14 @@
             width: 180px;
 
             @include direction {
-                #{$padding-inline-start}: 20px;
-                #{$padding-inline-end}: 20px;
+                #{$padding-inline-start}: 1px;
+                #{$padding-inline-end}: 1px;
             }
         }
         .product-card__info {
             @include direction {
                 #{$padding-inline-start}: 4px;
-                #{$padding-inline-end}: 20px;
+                #{$padding-inline-end}: 10px;
             }
         }
     }
@@ -127,16 +127,16 @@
         .product-card__image {
             width: 250px;
             max-width: 100%;
-            padding: 20px;
+            padding: 1px;
             margin: 0 auto;
         }
         .product-card__info {
             border-top: 1px solid $product-card-divider-color;
-            padding: 20px;
+            padding: 10px;
 
             @include direction {
-                #{$padding-inline-start}: 20px;
-                #{$padding-inline-end}: 20px;
+                #{$padding-inline-start}: 10px;
+                #{$padding-inline-end}: 10px;
             }
         }
         .product-card__actions {
@@ -168,13 +168,13 @@
 
 @mixin product-card-grid() {
     .product-card__image {
-        padding: 18px 18px 20px;
+        padding: 1px;
     }
     .product-card__info {
-        padding: 0 24px 0;
+        padding: 0 10px 0;
     }
     .product-card__actions {
-        padding: 0 24px 24px;
+        padding: 0 10px 10px;
     }
     .product-card__description {
         display: none;
@@ -193,7 +193,7 @@
 }
 @mixin product-card-grid-xs() {
     .product-card__image {
-        padding: 15px;
+        padding: 1px;
     }
     .product-card__badges-list {
         top: 16px;
@@ -203,16 +203,16 @@
         }
     }
     .product-card__info {
-        padding: 0 15px 0;
+        padding: 0 10px 0;
     }
     .product-card__actions {
-        padding: 0 15px 15px;
+        padding: 0 10px 10px;
     }
     .product-card__buttons {
         flex-wrap: wrap;
         justify-content: center;
         margin-bottom: -9px;
-        margin-top: 16px;
+        margin-top: 10px;
 
         > * + * {
             margin-top: 6px;
@@ -266,7 +266,7 @@
 }
 @mixin product-card-grid-sm() {
     .product-card__image {
-        padding: 15px;
+        padding: 1px;
     }
     .product-card__badges-list {
         top: 16px;
@@ -276,10 +276,10 @@
         }
     }
     .product-card__info {
-        padding: 0 15px 0;
+        padding: 0 10px 0;
     }
     .product-card__actions {
-        padding: 0 15px 15px;
+        padding: 0 10px 10px;
     }
 
     .product-card__buttons .btn {
@@ -361,10 +361,10 @@
 }
 @mixin product-card-grid-lg() {
     .product-card__image {
-        padding: 25px;
+        padding: 1px;
     }
     .product-card__info {
-        padding: 0 30px 0;
+        padding: 0 10px 0;
         flex-grow: 0;
     }
     .product-card__name {
@@ -372,7 +372,7 @@
         line-height: 23px;
     }
     .product-card__actions {
-        padding: 0 30px 30px;
+        padding: 0 10px 10px;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -392,7 +392,7 @@
 
     .product-card__image {
         width: 120px;
-        padding: 16px;
+        padding: 1px;
     }
     .product-card__badges-list {
         top: 10px;
@@ -405,13 +405,13 @@
         padding: 3px 5px 2px;
     }
     .product-card__info {
-        padding-top: 14px;
-        padding-bottom: 42px;
+        padding-top: 10px;
+        padding-bottom: 10px;
         width: 100%;
 
         @include direction {
             #{$padding-inline-start}: 0;
-            #{$padding-inline-end}: 30px;
+            #{$padding-inline-end}: 10px;
         }
     }
     .product-card__name {

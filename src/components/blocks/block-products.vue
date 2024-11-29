@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="block-products__list">
-                    <div v-for="product in products.slice(0, 6)" :key="product.id" class="block-products__list-item">
+                    <div v-for="product in products" :key="product.id" class="block-products__list-item">
                         <ProductCard :product="product" />
                     </div>
                 </div>

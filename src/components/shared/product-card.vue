@@ -1,7 +1,7 @@
 <template>
     <div
         :class="[
-            'product-card', 'product-card--hidden-actions', {
+            'product-card', '!product-card--hidden-actions', {
                 'product-card--layout--grid product-card--size--sm': layout === 'grid-sm',
                 'product-card--layout--grid product-card--size--nl': layout === 'grid-nl',
                 'product-card--layout--grid product-card--size--lg': layout === 'grid-lg',
