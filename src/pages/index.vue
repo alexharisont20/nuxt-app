@@ -218,24 +218,5 @@ export default class HomePageOne extends Vue {
             category: tab.categorySlug
         });
     }
-
-    async getSectionProducts(sectionId) {
-        return await this.sectionProductsSource({ sectionId, id: 0 });
-    }
-
-    sectionProductsSource(tab: {
-        sectionId: string;
-        id: number;
-    }): Promise<IProduct[]> {
-        console.log(tab);
-        return fetch(
-            `http://localhost/api/sections/${tab.sectionId}/products?category=${tab.id}`
-        )
-            .then(response => response.json())
-            .catch(error => {
-                console.error("Error fetching section products:", error);
-                return [];
-            });
-    }
 }
 </script>

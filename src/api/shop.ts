@@ -116,11 +116,11 @@ function make (context: Context) {
              * - screwdriver-a2017 = slug
              * - limit             = options.limit
              */
-            // return fetch(`https://example.com/api/products/${slug}/related.json?${qs.stringify(options)}`)
-            //     .then((response) => response.json());
+            return fetch(`http://localhost/api/products/${slug}/related.json?${qs.stringify(options)}`)
+                .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
-            return getRelatedProducts(slug, options)
+            // return getRelatedProducts(slug, options)
         },
         /**
          * Return products list.

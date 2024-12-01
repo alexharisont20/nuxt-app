@@ -82,68 +82,33 @@
                 </div>
 
                 <form class="product__options">
-                    <div class="form-group product__option">
+                    <div v-for="attribute in product.attributes" :key="attribute.id" class="form-group product__option">
                         <div class="product__option-label">
-                            Color
+                            {{ attribute.name }}
                         </div>
-                        <div class="input-radio-color">
+                        <div v-if="attribute.name === 'Color'" class="input-radio-color">
                             <div class="input-radio-color__list">
                                 <label
+                                    v-for="option in product.optionGroup[attribute.id.toString()]"
+                                    :key="option.id"
                                     class="input-radio-color__item input-radio-color__item--white"
-                                    :style="{ color: '#fff' }"
+                                    :style="{ color: option.value }"
                                     data-toggle="tooltip"
-                                    title="White"
+                                    :title="option.name"
                                 >
-                                    <input type="radio" name="color">
-                                    <span />
-                                </label>
-                                <label
-                                    class="input-radio-color__item"
-                                    :style="{ color: '#ffd333' }"
-                                    data-toggle="tooltip"
-                                    title="Yellow"
-                                >
-                                    <input type="radio" name="color">
-                                    <span />
-                                </label>
-                                <label
-                                    class="input-radio-color__item"
-                                    :style="{ color: '#ff4040' }"
-                                    data-toggle="tooltip"
-                                    title="Red"
-                                >
-                                    <input type="radio" name="color">
-                                    <span />
-                                </label>
-                                <label
-                                    class="input-radio-color__item input-radio-color__item--disabled"
-                                    :style="{ color: '#4080ff' }"
-                                    data-toggle="tooltip"
-                                    title="Blue"
-                                >
-                                    <input type="radio" name="color" disabled>
+                                    <input v-model="product.options[attribute.id.toString()]" type="radio" :value="option.id">
                                     <span />
                                 </label>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group product__option">
-                        <div class="product__option-label">
-                            Material
-                        </div>
-                        <div class="input-radio-label">
+                        <div v-else class="input-radio-label">
                             <div class="input-radio-label__list">
-                                <label>
-                                    <input type="radio" name="material">
-                                    <span>Metal</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="material">
-                                    <span>Wood</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="material" disabled>
-                                    <span>Plastic</span>
+                                <label
+                                    v-for="option in product.optionGroup[attribute.id.toString()]"
+                                    :key="option.id"
+                                >
+                                    <input v-model="product.options[attribute.id.toString()]" type="radio" :value="option.id">
+                                    <span>{{ option.name }}</span>
                                 </label>
                             </div>
                         </div>
