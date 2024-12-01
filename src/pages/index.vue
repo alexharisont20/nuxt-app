@@ -4,55 +4,9 @@
 
         <BlockFeatures />
 
+        <!-- Sections -->
         <div v-for="(section, index) in sections" :key="index">
-            <BlockProductsCarouselContainer
-                v-if="section.type == 'carousel-grid'"
-                v-slot="{ products, isLoading, tabs, handleTabChange }"
-                :tabs="section.categories"
-                :initial-data="section.products"
-                :data-source="sectionProductsSource"
-            >
-                <BlockProductsCarousel
-                    :title="section.title"
-                    :layout="`grid-${section.data.cols}`"
-                    :rows="parseInt(section.data.rows)"
-                    :products="products"
-                    :loading="isLoading"
-                    :groups="tabs"
-                    @groupClick="handleTabChange"
-                />
-            </BlockProductsCarouselContainer>
-            <div
-                v-else-if="section.type == 'pure-grid'"
-                class="container products-view"
-            >
-                <BlockHeader
-                    :title="section.title"
-                    :groups="section.categories"
-                    arrows
-                    @next="()=>{}"
-                    @prev="()=>{}"
-                    @group-click="$emit('groupClick', $event)"
-                />
-                <div class="products-view__content">
-                    <div
-                        class="products-view__list products-list"
-                        data-layout="grid-4-full"
-                        :data-with-features="true"
-                        :data-mobile-grid-columns="2"
-                    >
-                        <div class="products-list__body">
-                            <div
-                                v-for="product in section.products"
-                                :key="product.id"
-                                class="products-list__item"
-                            >
-                                <ProductCard :product="product" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <BlockSection :section="section" />
         </div>
 
         <BlockProductsCarouselContainer
@@ -144,6 +98,7 @@ import BlockProductColumns from "~/components/blocks/block-product-columns.vue";
 import dataShopBlockCategories from "~/data/shopBlockCategories";
 import dataBlogPosts from "~/data/blogPosts";
 import BlockHeader from "~/components/shared/block-header.vue";
+import BlockSection from "~/components/blocks/block-section.vue";
 
 async function loadColumns(shopApi: ShopApi) {
     const topRated = shopApi.getTopRatedProducts({ limit: 3 });
@@ -170,7 +125,8 @@ async function loadColumns(shopApi: ShopApi) {
         BlockBrands,
         BlockProductColumns,
         BlockHeader,
-        ProductCard
+        ProductCard,
+        BlockSection
     },
     async asyncData(context: Context) {
         context.store.commit("options/setHeaderLayout", "default");
@@ -193,17 +149,7 @@ async function loadColumns(shopApi: ShopApi) {
             null
         );
 
-        const sections = runOnlyOnServer(() => {
-            return fetch("http://localhost/api/sections")
-                .then(response => response.json())
-                .catch(error => {
-                    console.error("Error fetching sections:", error);
-                    return [];
-                });
-        }, []);
-
         return {
-            sections: await sections,
             featuredProducts: await featuredProducts,
             bestsellers: await bestsellers,
             latestProducts: await latestProducts,
@@ -229,7 +175,24 @@ export default class HomePageOne extends Vue {
 
     columns: BlockProductColumnsItem[] | null = [];
 
+    sections: any[] = [];
+
+    async fetchSections() {
+        try {
+            const response = await fetch("http://localhost/api/sections");
+            response.json().then(data => {
+                this.sections = data;
+            });
+        } catch (error) {
+            console.error("Error fetching sections:", error);
+            this.sections = [];
+        }
+    }
+
     mounted() {
+        if (this.sections.length === 0) {
+            this.fetchSections();
+        }
         if (this.bestsellers === null) {
             this.$shopApi.getPopularProducts({ limit: 7 }).then(products => {
                 this.bestsellers = products;
@@ -256,8 +219,15 @@ export default class HomePageOne extends Vue {
         });
     }
 
-    sectionProductsSource (tab: {sectionId: string, id: number}): Promise<IProduct[]> {
-        console.log(tab)
+    async getSectionProducts(sectionId) {
+        return await this.sectionProductsSource({ sectionId, id: 0 });
+    }
+
+    sectionProductsSource(tab: {
+        sectionId: string;
+        id: number;
+    }): Promise<IProduct[]> {
+        console.log(tab);
         return fetch(
             `http://localhost/api/sections/${tab.sectionId}/products?category=${tab.id}`
         )
