@@ -51,7 +51,7 @@
                             <span v-else class="text-danger">Out Of Stock</span>
                         </template>
                     </li>
-                    <li>
+                    <li v-if="product.brand">
                         Brand:
                         <AppLink to="/">
                             {{ product.brand.name }}

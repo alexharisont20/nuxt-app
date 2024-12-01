@@ -95,6 +95,8 @@ function make (context: Context) {
              * where:
              * - screwdriver-a2017 = slug
              */
+            slug = encodeURIComponent(slug);
+
             return fetch(`http://localhost/api/products/${slug}.json`)
                 .then((response) => response.json());
 
