@@ -1,12 +1,11 @@
 <template>
     <BlockProductsCarouselContainer
-        v-if="section.type == 'carousel-grid'"
         v-slot="{ products, isLoading, tabs, handleTabChange }"
         :tabs="section.categories"
-        :initial-data="products"
         :data-source="sectionProductsSource"
     >
         <BlockProductsCarousel
+            v-if="section.type == 'carousel-grid'"
             :title="section.title"
             :layout="`grid-${section.data.cols}`"
             :rows="parseInt(section.data.rows)"
@@ -15,38 +14,45 @@
             :groups="tabs"
             @groupClick="handleTabChange"
         />
-    </BlockProductsCarouselContainer>
-    <div
-        v-else-if="section.type == 'pure-grid'"
-        class="container products-view"
-    >
-        <BlockHeader
-            :title="section.title"
-            :groups="section.categories"
-            arrows
-            @next="() => {}"
-            @prev="() => {}"
-            @group-click="$emit('groupClick', $event)"
-        />
-        <div class="products-view__content">
-            <div
-                class="products-view__list products-list"
-                data-layout="grid-4-full"
-                :data-with-features="true"
-                :data-mobile-grid-columns="2"
-            >
-                <div class="products-list__body">
-                    <div
-                        v-for="product in products"
-                        :key="product.id"
-                        class="products-list__item"
-                    >
-                        <ProductCard :product="product" />
+        <div
+            v-else-if="section.type == 'pure-grid'"
+            :class="[
+                'container products-view',
+                {
+                    'block-products-carousel--loading': isLoading,
+                }
+            ]"
+        >
+            <BlockHeader
+                :title="section.title"
+                :groups="section.categories"
+                arrows
+                @next="() => {}"
+                @prev="() => {}"
+                @group-click="$emit('groupClick', $event)"
+            />
+            <div class="products-view__content">
+                <div
+                    class="products-view__list products-list"
+                    data-layout="grid-4-full"
+                    :data-with-features="true"
+                    :data-mobile-grid-columns="2"
+                >
+                    <div class="products-list__body">
+                        <div class="block-products-carousel__preloader" />
+
+                        <div
+                            v-for="product in products"
+                            :key="product.id"
+                            class="products-list__item"
+                        >
+                            <ProductCard :product="product" />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </BlockProductsCarouselContainer>
 </template>
 
 <script lang="ts">
@@ -79,7 +85,6 @@ export default class BlockSection extends Vue {
         if (!this.products.length) {
             this.sectionProductsSource({ sectionId: this.section.id, id: 0 }).then((products) => {
                 this.products = products
-                console.log(products)
                 this.isLoading = false
             })
         }
