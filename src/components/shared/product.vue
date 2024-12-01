@@ -40,44 +40,24 @@
                 <h1 class="product__name">
                     {{ product.name }}
                 </h1>
-                <div class="product__rating">
-                    <div class="product__rating-stars">
-                        <Rating :value="product.rating" />
-                    </div>
-                    <div class="product__rating-legend">
-                        <AppLink to="/">
-                            {{ product.reviews }} Reviews
-                        </AppLink>
-                        <span>/</span>
-                        <AppLink to="/">
-                            Write A Review
-                        </AppLink>
-                    </div>
-                </div>
-                <div class="product__description">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-                    ornare, mi in ornare elementum, libero nibh lacinia urna, quis
-                    convallis lorem erat at purus. Maecenas eu varius nisi.
-                </div>
-                <ul class="product__features">
-                    <li>Speed: 750 RPM</li>
-                    <li>Power Source: Cordless-Electric</li>
-                    <li>Battery Cell Type: Lithium</li>
-                    <li>Voltage: 20 Volts</li>
-                    <li>Battery Capacity: 2 Ah</li>
-                </ul>
                 <ul class="product__meta">
                     <li class="product__meta-availability">
                         Availability:
-                        <span class="text-success">In Stock</span>
+                        <template v-if="product.availability == 'In Stock'">
+                            <span class="text-success">In Stock</span>
+                        </template>
+                        <template v-else>
+                            <span v-if="parseInt(product.availability) > 0" class="text-success">{{ product.availability }} In Stock</span>
+                            <span v-else class="text-danger">Out Of Stock</span>
+                        </template>
                     </li>
                     <li>
                         Brand:
                         <AppLink to="/">
-                            Wakita
+                            {{ product.brand.name }}
                         </AppLink>
                     </li>
-                    <li>SKU: 83690/32</li>
+                    <li>SKU: {{ product.sku }}</li>
                 </ul>
             </div>
 
@@ -237,14 +217,8 @@
             <div class="product__footer">
                 <div class="product__tags tags">
                     <div class="tags__list">
-                        <AppLink to="/">
-                            Mounts
-                        </AppLink>
-                        <AppLink to="/">
-                            Electrodes
-                        </AppLink>
-                        <AppLink to="/">
-                            Chainsaws
+                        <AppLink v-for="category in product.categories" :key="category.id" to="/">
+                            {{ category.name }}
                         </AppLink>
                     </div>
                 </div>

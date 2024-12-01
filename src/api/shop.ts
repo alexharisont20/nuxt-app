@@ -95,11 +95,11 @@ function make (context: Context) {
              * where:
              * - screwdriver-a2017 = slug
              */
-            // return fetch(`https://example.com/api/products/${slug}.json`)
-            //     .then((response) => response.json());
+            return fetch(`http://localhost/api/products/${slug}.json`)
+                .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
-            return getProductBySlug(slug)
+            // return getProductBySlug(slug)
         },
         /**
          * Returns array of related products.

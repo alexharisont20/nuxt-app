@@ -8,9 +8,9 @@ export interface CurrencyState {
 function getDefaultState (): CurrencyState {
     return {
         current: {
-            code: 'USD',
-            symbol: '$',
-            name: 'US Dollar'
+            code: 'BDT',
+            symbol: '৳',
+            name: 'Bangladeshi Taka'
         }
     }
 }
