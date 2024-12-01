@@ -18,7 +18,7 @@
                 >
                     <div class="block-slideshow__body">
                         <Carousel
-                            v-if="slides.length"
+                            v-if="slides.length && !isSlidesLoading"
                             :options="{
                                 navigation: {
                                     nextEl: '.swiper-button-next',
@@ -59,7 +59,7 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { Action, Getter } from 'vuex-class'
 import { ILanguage } from '~/interfaces/language'
 import departments from '~/services/departments'
 import Carousel from '~/components/shared/carousel.vue'
@@ -87,28 +87,19 @@ interface Slide {
 export default class BlockSlideshow extends Vue {
     @Prop({ type: String, default: () => 'full' }) readonly layout!: BlockSlideshowLayout
     @Getter('locale/language') language!: ILanguage
-
-    slides: Slide[] = [] // Vuex getter to fetch slides
+    @Getter('slide/allSlides') slides!: Slide[]
+    @Getter('slide/isLoading') isSlidesLoading!: boolean
+    @Action('slide/fetchSlides') fetchSlides!: () => Promise<void>
 
     get direction () {
         return this.language.direction
     }
 
-    mounted () {
-        this.fetchSlides() // Fetch slides when the component is mounted
-        departments.set(this.$el)
-    }
-
-    async fetchSlides () {
-        try {
-            const response = await fetch('http://localhost/api/slides') // Replace with your API endpoint
-            if (!response.ok) {
-                throw new Error(`Failed to fetch slides: ${response.statusText}`)
-            }
-            this.slides = await response.json()
-        } catch (error) {
-            console.error('Failed to fetch slides:', error)
+    mounted() {
+        if (this.slides.length === 0) {
+            this.fetchSlides()
         }
+        departments.set(this.$el)
     }
 
     beforeDestroy () {
