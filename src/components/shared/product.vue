@@ -176,6 +176,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="p-1 my-2 text-center call-for-order" style="border: 2px dashed #dedede;">
+                        <div>এই পণ্য সম্পর্কে প্রশ্ন আছে? অনুগ্রহপূর্বক কল করুন:</div>
+                        <a href="tel:01XXXXXXXXX" class="text-danger">
+                            <div class="mt-1 lead">
+                                <i class="mr-2 fa fas fa-phone" />
+                                <span>01XXXXXXXXX</span>
+                            </div>
+                        </a>
+                    </div>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="text-center">Delivery Charge</th>
+                            </tr>
+                            <tr>
+                                <th width="50%">Inside Dhaka</th>
+                                <th width="50%">Outside Dhaka</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TK&nbsp;<span>{{ product.shipping_inside }}</span></td>
+                                <td>TK&nbsp;<span>{{ product.shipping_outside }}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </form>
             </div>
 

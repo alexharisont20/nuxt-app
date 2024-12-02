@@ -30,6 +30,7 @@ export interface IProduct {
     rating: number;
     attributes: IProductAttribute[];
     availability: string;
+    options?: [];
 }
 
 export type IProductsList = IPaginatedList<IProduct> & IFilterableList<IProduct, IFilter>;

@@ -103,6 +103,10 @@ function make (context: Context) {
             // This is for demonstration purposes only. Remove it and use the code above.
             // return getProductBySlug(slug)
         },
+        getProductVariation: (slug: string, options: Object): Promise<IProduct> => {
+            return fetch(`http://localhost/api/products/${slug}.json?${qs.stringify(options)}`)
+                .then((response) => response.json());
+        },
         /**
          * Returns array of related products.
          */
