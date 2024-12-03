@@ -128,38 +128,38 @@ async function loadColumns(shopApi: ShopApi) {
         ProductCard,
         BlockSection
     },
-    async asyncData(context: Context) {
+    async asyncData (context: Context) {
         context.store.commit("options/setHeaderLayout", "default");
         context.store.commit("options/setDropcartType", "dropdown");
 
         const featuredProducts = runOnlyOnServer(
             () => context.$shopApi.getFeaturedProducts({ limit: 8 }),
             null
-        );
+        )
         const bestsellers = runOnlyOnServer(
             () => context.$shopApi.getPopularProducts({ limit: 7 }),
             null
-        );
+        )
         const latestProducts = runOnlyOnServer(
             () => context.$shopApi.getLatestProducts({ limit: 8 }),
             null
-        );
+        )
         const columns = runOnlyOnServer(
             () => loadColumns(context.$shopApi),
             null
-        );
+        )
 
         return {
             featuredProducts: await featuredProducts,
             bestsellers: await bestsellers,
             latestProducts: await latestProducts,
             columns: await columns
-        };
+        }
     },
-    head() {
+    head () {
         return {
             title: this.$setting('company').tagline
-        };
+        }
     }
 })
 export default class HomePageOne extends Vue {
