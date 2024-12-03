@@ -1,9 +1,15 @@
 import { Context } from '@nuxt/types'
 
-export default async ({ store }: Context, inject: (key: string, value: any) => void) => {
+declare module 'vue/types/vue' {
+    interface Vue {
+        $setting: (key: string) => any
+    }
+}
+
+export default ({ store }: Context, inject: (key: string, value: any) => void) => {
     try {
         // Load global settings
-        await store.dispatch('setting/fetchSettings', ['logo', 'company'])
+        // await store.dispatch('setting/fetchSettings', ['logo', 'company'])
 
         // Inject $setting for global use
         const $setting = (key: string) => {

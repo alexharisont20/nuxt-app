@@ -1,3 +1,4 @@
+import { ActionTree } from 'vuex';
 import { OffcanvasCartState } from '~/store/offcanvasCart'
 import { MobileMenuState } from '~/store/mobileMenu'
 import { OptionsState } from '~/store/options'
@@ -8,6 +9,13 @@ import { CartState } from '~/store/cart'
 import { LocaleState } from '~/store/locale'
 import { ShopState } from '~/store/shop'
 import { SettingState } from '~/store/setting'
+
+export const actions: ActionTree<{}, {}> = {
+    async nuxtServerInit({ dispatch }) {
+        console.log('nuxtServerInit is called!');
+        await dispatch('setting/fetchSettings', ['logo', 'company']);
+    }
+};
 
 export interface RootState {
     cart: CartState;
