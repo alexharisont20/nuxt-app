@@ -66,7 +66,6 @@ export default class Departments extends Vue {
                 throw new Error(`Failed to fetch categories: ${response.statusText}`)
             }
             this.items = withMenu(await response.json())
-            console.log('fetched')
         } catch (error) {
             console.error('Failed to fetch categories:', error)
         }

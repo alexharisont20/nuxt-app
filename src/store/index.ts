@@ -7,6 +7,7 @@ import { WishlistState } from '~/store/wishlist'
 import { CartState } from '~/store/cart'
 import { LocaleState } from '~/store/locale'
 import { ShopState } from '~/store/shop'
+import { SettingState } from '~/store/setting'
 
 export interface RootState {
     cart: CartState;
@@ -18,4 +19,5 @@ export interface RootState {
     wishlist: WishlistState;
     locale: LocaleState;
     shop: ShopState;
+    setting: SettingState;
 }

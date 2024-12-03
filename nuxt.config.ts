@@ -111,6 +111,7 @@ const config: NuxtConfig = {
     ** Plugins to load before mounting the App
     */
     plugins: [
+        '~/plugins/setting.ts',
         '~/plugins/url.ts',
         '~/plugins/currency.ts',
         '~/plugins/i18n.ts',

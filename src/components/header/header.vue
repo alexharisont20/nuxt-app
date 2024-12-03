@@ -2,11 +2,11 @@
     <div class="site-header">
         <Topbar />
 
-        <div v-if="layout === 'default'" class="site-header__middle container">
+        <div v-if="layout === 'default'" class="container site-header__middle">
             <div class="site-header__logo">
                 <AppLink to="/">
                     <!-- logo -->
-                    <LogoSvg />
+                    <img :src="`http://localhost${$setting('logo').desktop}`" class="img-fluid" alt="Logo" style="width: 260px;" />
                     <!-- logo / end -->
                 </AppLink>
             </div>
@@ -18,7 +18,7 @@
                     Customer Service
                 </div>
                 <div class="site-header__phone-number">
-                    {{ theme.contacts.phone }}
+                    {{ $setting('company').phone }}
                 </div>
             </div>
         </div>

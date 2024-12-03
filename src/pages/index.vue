@@ -158,7 +158,7 @@ async function loadColumns(shopApi: ShopApi) {
     },
     head() {
         return {
-            title: "Home Page One"
+            title: this.$setting('company').tagline
         };
     }
 })
