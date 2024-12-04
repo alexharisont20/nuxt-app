@@ -13,7 +13,7 @@
             <form class="search__form">
                 <select
                     v-if="location === 'header'"
-                    class="search__categories"
+                    class="d-none search__categories"
                     aria-label="Category"
                     @change="onCategoryChange"
                     @focus="onCategoryFocus"
@@ -33,7 +33,7 @@
                     ref="input"
                     class="search__input"
                     name="search"
-                    placeholder="Search over 10,000 products"
+                    placeholder="Search products"
                     aria-label="Site search"
                     type="text"
                     autocomplete="off"

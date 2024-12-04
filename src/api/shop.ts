@@ -263,11 +263,11 @@ function make (context: Context) {
              * - 5           = options.limit
              * - power-tools = options.category
              */
-            // return fetch(`https://example.com/api/search/suggestions.json?${qs.stringify({ ...options, query })}`)
-            //     .then((response) => response.json());
+            return fetch(`http://localhost/api/search/suggestions.json?${qs.stringify({ ...options, query })}`)
+                .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
-            return getSuggestions(query, options)
+            // return getSuggestions(query, options)
         }
     }
 }

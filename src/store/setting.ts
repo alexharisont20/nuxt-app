@@ -21,6 +21,7 @@ export const mutations: MutationTree<SettingState> = {
     },
     fetchSettingsSuccess(state, settings: Object) {
         state.isLoading = false
+        console.log('fetched', settings)
         state.settings = { ...state.settings, ...settings }
     },
     fetchSettingsFailure(state, error: string) {

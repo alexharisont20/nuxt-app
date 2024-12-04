@@ -6,9 +6,9 @@
                     <div class="col-12 col-md-6 col-lg-4">
                         <footer-contacts />
                     </div>
-                    <div class="col-6 col-md-3 col-lg-2">
+                    <div class="col-6 col-md-6 col-lg-4">
                         <footer-links
-                            title="Information"
+                            title="Quick Links"
                             :links="[
                                 {title: 'About Us', url: ''},
                                 {title: 'Delivery Information', url: ''},
@@ -17,20 +17,6 @@
                                 {title: 'Contact Us', url: ''},
                                 {title: 'Returns', url: ''},
                                 {title: 'Site Map', url: ''}
-                            ]"
-                        />
-                    </div>
-                    <div class="col-6 col-md-3 col-lg-2">
-                        <footer-links
-                            title="My Account"
-                            :links="[
-                                {title: 'Store Location', url: ''},
-                                {title: 'Order History', url: ''},
-                                {title: 'Wish List', url: ''},
-                                {title: 'Newsletter', url: ''},
-                                {title: 'Specials', url: ''},
-                                {title: 'Gift Certificates', url: ''},
-                                {title: 'Affiliate', url: ''}
                             ]"
                         />
                     </div>
@@ -59,6 +45,7 @@
 <script lang="ts">
 
 import { Vue, Component } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import FooterContacts from '~/components/footer/footer-contacts.vue'
 import FooterLinks from '~/components/footer/footer-links.vue'
 import FooterNewsletter from '~/components/footer/footer-newsletter.vue'
@@ -70,6 +57,7 @@ import theme from '~/data/theme'
 })
 export default class Footer extends Vue {
     theme = theme
+    @Getter('menu/getMenu') getMenu!: Function
 }
 
 </script>

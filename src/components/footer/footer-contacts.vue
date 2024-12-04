@@ -5,26 +5,25 @@
         </h5>
 
         <div class="footer-contacts__text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in feugiat lorem. Pellentque ac placerat
-            tellus.
+            {{ $setting('company').tagline }}
         </div>
 
         <ul class="footer-contacts__contacts">
             <li>
                 <i class="footer-contacts__icon fas fa-globe-americas" />
-                {{ theme.contacts.address }}
+                {{ $setting('company').address }}
             </li>
             <li>
                 <i class="footer-contacts__icon far fa-envelope" />
-                {{ theme.contacts.email }}
+                {{ $setting('company').email }}
             </li>
             <li>
                 <i class="footer-contacts__icon fas fa-mobile-alt" />
-                {{ theme.contacts.phone }}, {{ theme.contacts.phone }}
+                {{ $setting('company').phone }}
             </li>
             <li>
                 <i class="footer-contacts__icon far fa-clock" />
-                Mon-Sat 10:00pm - 7:00pm
+                <span v-html="$setting('company').office_time" />
             </li>
         </ul>
     </div>
