@@ -152,7 +152,9 @@ function make (context: Context) {
             }
 
             Object.keys(filters).forEach((slug) => {
-                params[`filter_${slug}`] = encodeURIComponent(filters[slug])
+                if (filters[slug]) {
+                    params[`filter_${slug}`] = encodeURIComponent(filters[slug])
+                }
             })
 
             return fetch('http://localhost/api/shop?' + qs.stringify(params))

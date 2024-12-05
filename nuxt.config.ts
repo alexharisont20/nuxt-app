@@ -57,7 +57,7 @@ const config: NuxtConfig = {
         const options: NuxtOptionsHead = {
             title: process.env.npm_package_name || '',
             titleTemplate(titleChunk: string) {
-                return titleChunk ?? 'E-Commerce'
+                return titleChunk || 'E-Commerce'
                 // return titleChunk ? `${titleChunk} — Stroyka` : 'Stroyka'
             },
             htmlAttrs: {
