@@ -15,6 +15,7 @@
                 Try resetting the filters
             </div>
             <button
+                v-if="false"
                 type="button"
                 class="btn btn-primary btn-sm"
                 @click="$store.dispatch('shop/resetFilters')"
@@ -24,7 +25,7 @@
         </div>
 
         <div v-if="productsList.items.length !== 0" class="products-view__content">
-            <div class="products-view__options">
+            <div v-if="false" class="products-view__options">
                 <div
                     :class="[
                         'view-options',
@@ -150,6 +151,7 @@ import Filters16Svg from '~/svg/filters-16.svg'
 import LayoutGrid16x16Svg from '~/svg/layout-grid-16x16.svg'
 import LayoutGridWithDetails16x16Svg from '~/svg/layout-grid-with-details-16x16.svg'
 import LayoutList16x16Svg from '~/svg/layout-list-16x16.svg'
+import { runOnlyOnServer } from '~/services/helpers'
 
 export type ProductsViewLayout = 'grid' | 'grid-with-features' | 'list';
 export type ProductsViewGrid = 'grid-3-sidebar' | 'grid-4-full' | 'grid-5-full';
@@ -162,14 +164,45 @@ interface ViewMode {
 }
 
 @Component({
-    components: { Pagination, ProductCard, Filters16Svg }
+    components: { Pagination, ProductCard, Filters16Svg },
+    async asyncData ({ store, query }): Promise<object | void> {
+        const productsList = runOnlyOnServer(() => fetch('http://localhost/api/shop')
+            .then(response => response.json())
+            .then(({data, meta}) => ({
+                filters: [],
+                from: meta.from,
+                items: data,
+                limit: meta.per_page,
+                page: meta.current_page,
+                pages: meta.last_page,
+                sort: 'default',
+                to: meta.to,
+                total: meta.total
+            })), null)
+
+        return {
+            productsList: await productsList
+        }
+    }
 })
 export default class ProductsView extends Vue {
     @Prop({ type: String, default: () => 'grid' }) readonly layout!: ProductsViewLayout
     @Prop({ type: String, default: () => 'grid-3-sidebar' }) readonly grid!: ProductsViewGrid
     @Prop({ type: String, default: () => 'mobile' }) readonly offcanvas!: ProductsViewOffcanvas
 
-    @Getter('shop/productsList') productsList!: IProductsList
+    // productsList: IProductsList = {
+    //     filters: [],
+    //     from: 0,
+    //     items: [],
+    //     limit: 0,
+    //     page: 0,
+    //     pages: 0,
+    //     sort: 'default',
+    //     to: 0,
+    //     total: 0
+    // }
+
+    // @Getter('shop/productsList') productsList!: IProductsList
     @Getter('shop/options') options!: IListOptions
     @Getter('shop/filters') filters!: IFilterValues
 
@@ -183,6 +216,25 @@ export default class ProductsView extends Vue {
 
     get filtersCount () {
         return Object.keys(this.filters).map(x => this.filters[x]).filter(x => x).length
+    }
+
+    mounted() {
+        console.log(this.productsList)
+        // fetch('http://localhost/api/shop')
+        //     .then(response => response.json())
+        //     .then(({data, meta}) => {
+        //         this.productsList = {
+        //             filters: [],
+        //             from: meta.from,
+        //             items: data,
+        //             limit: meta.per_page,
+        //             page: meta.current_page,
+        //             pages: meta.last_page,
+        //             sort: 'default',
+        //             to: meta.to,
+        //             total: meta.total
+        //         }
+        //     })
     }
 
     handlePageChange (page: number) {

@@ -9,15 +9,7 @@
                     <div class="col-6 col-md-6 col-lg-4">
                         <footer-links
                             title="Quick Links"
-                            :links="[
-                                {title: 'About Us', url: ''},
-                                {title: 'Delivery Information', url: ''},
-                                {title: 'Privacy Policy', url: ''},
-                                {title: 'Brands', url: ''},
-                                {title: 'Contact Us', url: ''},
-                                {title: 'Returns', url: ''},
-                                {title: 'Site Map', url: ''}
-                            ]"
+                            :links="items"
                         />
                     </div>
                     <div class="col-12 col-md-12 col-lg-4">
@@ -29,8 +21,7 @@
             <div class="site-footer__bottom">
                 <div class="site-footer__copyright">
                     <!-- copyright -->
-                    Powered by <a href="https://vuejs.org/" target="_blank">Vue.js</a> —
-                    Design by <a :href="theme.author.profile_url" target="_blank">{{ theme.author.name }}</a>
+                    Developed by <a class="text-danger" :href="$setting('company').dev_href || 'https://cyber32.com'" target="_blank">{{ $setting('company').dev_name || 'Cyber 32' }}</a>
                     <!-- copyright / end -->
                 </div>
                 <div class="site-footer__payments">
@@ -58,6 +49,12 @@ import theme from '~/data/theme'
 export default class Footer extends Vue {
     theme = theme
     @Getter('menu/getMenu') getMenu!: Function
+
+    items = []
+
+    mounted() {
+        this.items = this.getMenu('quick-links').map((x: Object) => ({ title: x.name, url: x.href }))
+    }
 }
 
 </script>

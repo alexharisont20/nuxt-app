@@ -23,6 +23,7 @@ export const mutations: MutationTree<SettingState> = {
         state.isLoading = false
         console.log('fetched', settings)
         state.settings = { ...state.settings, ...settings }
+        console.log('merged', state.settings)
     },
     fetchSettingsFailure(state, error: string) {
         state.isLoading = false

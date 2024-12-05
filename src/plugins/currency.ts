@@ -4,7 +4,7 @@ import { Plugin } from '@nuxt/types'
 function price (this: Vue, value: number): string {
     const symbol = this.$store.state.currency.current.symbol
 
-    return `${symbol}${value.toFixed(2)}`
+    return `${symbol}${(value || 0).toFixed(2)}`
 }
 
 declare module 'vue/types/vue' {

@@ -206,11 +206,12 @@ $local-dot-size: $local-dots-height - $local-dots-padding * 2;
 @media (max-width: breakpoint(sm-end)) {
     .block-slideshow__body,
     .block-slideshow__slide {
-        height: 395px;
+        height: 180px !important;
     }
     .block-slideshow__slide-image--mobile {
         background-position: top center;
         display: block;
+        background-size: cover;
     }
     .block-slideshow__slide-content {
         top: 30px;

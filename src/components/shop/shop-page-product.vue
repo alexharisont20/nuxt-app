@@ -29,7 +29,34 @@
             <div class="block">
                 <div class="container">
                     <Product :product="product" :layout="layout" />
-                    <ProductTabs />
+                    <!-- <ProductTabs /> -->
+                    <div
+                        :class="[
+                            'product-tabs',
+                            {'product-tabs--layout--sidebar': false}
+                        ]"
+                    >
+                        <div class="border">
+                            <div class="product-tabs__list-body">
+                                <h3 class="container p-3 mb-0 product-tabs__list-container">
+                                    Product Description
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="p-3 product-tabs__content">
+                            <div v-html="product.description" />
+                        </div>
+                        <div class="border">
+                            <div class="product-tabs__list-body">
+                                <h3 class="container p-3 mb-0 product-tabs__list-container">
+                                    Delivery and Return Policy
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="p-3 product-tabs__content">
+                            <div v-html="$setting('delivery_text')" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -45,6 +72,7 @@
 
 <script lang="ts">
 
+import { Action } from 'vuex-class'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { IProduct } from '~/interfaces/product'
 import { ILink } from '~/interfaces/menus/link'
@@ -70,6 +98,8 @@ export default class ShopPageProduct extends Vue {
     @Prop({ type: String, default: () => 'standard' }) readonly layout!: ShopPageProductLayout
     @Prop({ type: String, default: () => 'start' }) readonly sidebarPosition!: ShopPageProductSidebarPosition
 
+    @Action('setting/fetchSettings') fetchSettings!: Function
+
     relatedProducts: IProduct[] = []
 
     get breadcrumb (): ILink[] {
@@ -80,7 +110,8 @@ export default class ShopPageProduct extends Vue {
         ]
     }
 
-    mounted () {
+    mounted() {
+        this.fetchSettings(['delivery_text'])
         this.$shopApi.getRelatedProducts(this.product.slug, { limit: 8 }).then((products) => {
             this.relatedProducts = products
         })

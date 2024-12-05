@@ -178,10 +178,10 @@
                     </div>
                     <div class="p-1 my-2 text-center call-for-order" style="border: 2px dashed #dedede;">
                         <div>এই পণ্য সম্পর্কে প্রশ্ন আছে? অনুগ্রহপূর্বক কল করুন:</div>
-                        <a href="tel:01XXXXXXXXX" class="text-danger">
+                        <a v-for="(number, i) in ($setting('call_for_order') || '').replace(/\s+/, ' ').split(' ')" :key="`number-${i}`" :href="`tel:${number}`" class="text-danger">
                             <div class="mt-1 lead">
                                 <i class="mr-2 fa fas fa-phone" />
-                                <span>01XXXXXXXXX</span>
+                                <span>{{ number }}</span>
                             </div>
                         </a>
                     </div>
@@ -245,6 +245,7 @@
 
 <script lang="ts">
 
+import { Action } from 'vuex-class'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { IProduct } from '~/interfaces/product'
 import Rating from '~/components/shared/rating.vue'
@@ -264,6 +265,8 @@ export default class Product extends Vue {
     @Prop({ type: String, required: true }) readonly layout!: ProductLayout
     @Prop({ type: Object, required: true }) readonly product!: IProduct
 
+    @Action('setting/fetchSettings') fetchSettings!: Function
+
     quantity: number | string = 1
 
     addToCart (): Promise<void> {
@@ -272,6 +275,10 @@ export default class Product extends Vue {
         }
 
         return this.$store.dispatch('cart/add', { product: this.product, quantity: this.quantity })
+    }
+
+    async mounted() {
+        await this.fetchSettings(['call_for_order'])
     }
 }
 

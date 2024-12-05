@@ -182,6 +182,17 @@ const config: NuxtConfig = {
                     }
                 ]
             })
+
+            // Exclude large files like icons.js from Babel processing
+            config.module.rules.push({
+                test: /icons\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        compact: false, // Disable compression for these files
+                    }
+                }
+            })
         }
     },
     generate: {
