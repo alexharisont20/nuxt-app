@@ -83,16 +83,12 @@ import LayoutError from '~/layouts/error.vue'
     async asyncData(context: Context) {
         return { page: await fetch(`http://localhost/api/page${context.route.path}`).then(response => response.json()) }
     },
-    head () {
+    head() {
         return {
             title: this.page.title
         }
     }
 })
-export default class SitePageTerms extends Vue {
-    mounted() {
-        console.log(this.page)
-    }
-}
+export default class Page extends Vue { }
 
 </script>

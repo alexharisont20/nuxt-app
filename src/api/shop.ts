@@ -77,11 +77,13 @@ function make (context: Context) {
              * - power-tools = slug
              * - 2           = options.depth
              */
-            // return fetch(`https://example.com/api/categories/${slug}.json?${qs.stringify(options)}`)
-            //     .then((response) => response.json());
+            slug = encodeURIComponent(slug);
+
+            return fetch(`http://localhost/api/categories/${slug}.json?${qs.stringify(options)}`)
+                .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
-            return getCategoryBySlug(slug, options)
+            // return getCategoryBySlug(slug, options)
         },
         /**
          * Returns product.
@@ -120,6 +122,8 @@ function make (context: Context) {
              * - screwdriver-a2017 = slug
              * - limit             = options.limit
              */
+            slug = encodeURIComponent(slug);
+
             return fetch(`http://localhost/api/products/${slug}/related.json?${qs.stringify(options)}`)
                 .then((response) => response.json());
 
@@ -142,17 +146,31 @@ function make (context: Context) {
              * - filter_category = filters.category
              * - filter_price    = filters.price
              */
-            // const params = { ...options };
-            //
-            // Object.keys(filters).forEach((slug) => {
-            //     params[`filter_${slug}`] = filters[slug];
-            // });
-            //
-            // return fetch(`https://example.com/api/products.json?${qs.stringify(params)}`)
-            //     .then((response) => response.json());
+            const params: { [key: string]: any } = {
+                page: options.page,
+                per_page: options.limit
+            }
+
+            Object.keys(filters).forEach((slug) => {
+                params[`filter_${slug}`] = encodeURIComponent(filters[slug])
+            })
+
+            return fetch('http://localhost/api/shop?' + qs.stringify(params))
+                .then(response => response.json())
+                .then(({data, meta}) => ({
+                    filters: [],
+                    from: meta.from,
+                    items: data,
+                    limit: meta.per_page,
+                    page: meta.current_page,
+                    pages: meta.last_page,
+                    sort: 'default',
+                    to: meta.to,
+                    total: meta.total
+                }))
 
             // This is for demonstration purposes only. Remove it and use the code above.
-            return getProductsList(options, filters)
+            // return getProductsList(options, filters)
         },
         /**
          * Returns array of featured products.

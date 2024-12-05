@@ -64,7 +64,7 @@
                         <Dropcart v-if="dropcartType === 'dropdown'" />
                     </Indicator>
 
-                    <Indicator ref="accountIndicator" :to="$url.accountDashboard()" trigger="click">
+                    <Indicator v-if="false" ref="accountIndicator" :to="$url.accountDashboard()" trigger="click">
                         <template #icon>
                             <Person20Svg />
                         </template>

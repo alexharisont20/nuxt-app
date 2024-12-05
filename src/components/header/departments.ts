@@ -41,7 +41,7 @@ export default class Departments extends Vue {
     }
 
     async fetchCategories() {
-        const url = (category: { slug: string }) => ('/shop/category-grid-4-columns-full?category=' + category.slug)
+        const url = (category: { slug: string }) => ('/shop?filter_category=' + category.slug)
 
         const withChildren = (categories: any[]): any => categories.map(category => ({
             title: category.name,
