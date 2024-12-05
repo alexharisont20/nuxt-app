@@ -25,7 +25,7 @@
 <script lang="ts">
 
 import { Vue, Component, Watch } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Getter, State } from 'vuex-class'
 import { RootState } from '~/store'
 import { IMobileMenu, IMobileMenuLink } from '~/interfaces/menus/mobile-menu'
 import MobileLinks from '~/components/mobile/mobile-links.vue'
@@ -39,40 +39,12 @@ import Cross20Svg from '~/svg/cross-20.svg'
 })
 export default class MobileMenu extends Vue {
     @State((state: RootState) => state.mobileMenu.isOpen) isOpen!: boolean
+    @Getter('department/mobileMenu') categories!: []
+    @Getter('menu/getMenu') getMenu!: Function
 
     bodyWidth: number = 0
 
-    links: IMobileMenu = [
-        ...dataMobileMenu,
-        {
-            type: 'button',
-            title: 'Currency',
-            children: dataShopCurrencies.map((currency) => {
-                return {
-                    type: 'button',
-                    title: `${currency.symbol} ${currency.name}`,
-                    data: {
-                        type: 'currency',
-                        currency
-                    }
-                }
-            })
-        },
-        {
-            type: 'button',
-            title: 'Language',
-            children: dataLanguages.map((language) => {
-                return {
-                    type: 'button',
-                    title: language.name,
-                    data: {
-                        type: 'language',
-                        language
-                    }
-                }
-            })
-        }
-    ]
+    links: IMobileMenu = []
 
     @Watch('isOpen')
     onIsOpenChange (newValue: boolean) {
@@ -81,6 +53,23 @@ export default class MobileMenu extends Vue {
         } else {
             this.close()
         }
+    }
+
+    mounted () {
+        this.links = [
+            ...this.links,
+            {
+                type: 'link',
+                title: 'Categories',
+                url: '',
+                children: this.categories
+            },
+            ...this.getMenu('header-menu').map(x => ({
+                type: 'link',
+                title: x.name,
+                url: x.href
+            }))
+        ]
     }
 
     open () {

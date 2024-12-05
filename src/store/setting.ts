@@ -21,9 +21,7 @@ export const mutations: MutationTree<SettingState> = {
     },
     fetchSettingsSuccess(state, settings: Object) {
         state.isLoading = false
-        console.log('fetched', settings)
         state.settings = { ...state.settings, ...settings }
-        console.log('merged', state.settings)
     },
     fetchSettingsFailure(state, error: string) {
         state.isLoading = false
@@ -40,7 +38,6 @@ export const actions: ActionTree<SettingState, {}> = {
 
         commit('fetchSettingsStart')
         try {
-            console.log('fetching settings', keys)
             // Construct the query string for the API
             const query = keysToFetch.map(key => `keys[]=${encodeURIComponent(key)}`).join('&')
             const response = await fetch(`http://localhost/api/settings?${query}`)

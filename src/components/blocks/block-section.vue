@@ -25,7 +25,12 @@
         >
             <div class="block-header">
                 <h3 class="block-header__title">
-                    {{ section.title }}
+                    <AppLink
+                        :to="`/shop?filter_section=${ section.id }`"
+                        class="text-dark"
+                    >
+                        {{ section.title }}
+                    </AppLink>
                 </h3>
                 <div class="block-header__divider" />
 

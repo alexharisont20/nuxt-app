@@ -13,6 +13,7 @@ import { SettingState } from '~/store/setting'
 export const actions: ActionTree<{}, {}> = {
     async nuxtServerInit({ dispatch }) {
         console.log('nuxtServerInit is called!');
+        await dispatch('department/fetchCategories');
         await dispatch('setting/fetchSettings', [
             'logo', 'company', 'social', 'scroll_text',
         ]);
