@@ -44,10 +44,10 @@ export const mutations: MutationTree<SectionState> = {
 
 // Actions
 export const actions: ActionTree<SectionState, {}> = {
-    async fetchSections({ commit }, _, context) {
+    async fetchSections({ commit }) {
         commit('fetchSectionsStart')
         try {
-            const response = await fetch(context.$url.api('sections')) // Replace with your API endpoint
+            const response = await fetch(this.$url.api('sections')) // Replace with your API endpoint
             if (!response.ok) {
                 throw new Error(`Failed to fetch sections: ${response.statusText}`)
             }

@@ -122,10 +122,13 @@ function make (context: Context) {
             return url
         },
         api(url: string) {
-            return 'http://localhost/api/' + url
+            return 'http://localhost/api' + (url[0] === '/' ? '' : '/') + url
         },
-        img (url: string) {
-            return this.base(url)
+        img(url: string) {
+            if (/^https?:\/\//.test(url)) {
+                return url
+            }
+            return 'http://localhost' + (url[0] === '/' ? '' : '/') + url
         }
     }
 }

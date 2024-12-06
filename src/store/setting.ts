@@ -31,7 +31,7 @@ export const mutations: MutationTree<SettingState> = {
 
 // Actions
 export const actions: ActionTree<SettingState, {}> = {
-    async fetchSettings({ commit, state }, keys: string[], context) {
+    async fetchSettings({ commit, state }, keys: string[]) {
         // Filter out keys that are already present in `state.settings`
         const keysToFetch = keys.filter(key => !(key in state.settings))
         if (keysToFetch.length === 0) { return } // Nothing to fetch
@@ -40,7 +40,7 @@ export const actions: ActionTree<SettingState, {}> = {
         try {
             // Construct the query string for the API
             const query = keysToFetch.map(key => `keys[]=${encodeURIComponent(key)}`).join('&')
-            const response = await fetch(context.$url.api(`settings?${query}`))
+            const response = await fetch(this.$url.api(`settings?${query}`))
             if (!response.ok) {
                 throw new Error(`Failed to fetch settings: ${response.statusText}`)
             }

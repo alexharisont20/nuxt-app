@@ -55,10 +55,10 @@ const withMenu = (categories: any[]): INav => categories.map(category => ({
 
 // Actions
 export const actions: ActionTree<DepartmentState, {}> = {
-    async fetchCategories({ commit }, _, context) {
+    async fetchCategories({ commit }) {
         commit('fetchCategoriesStart')
         try {
-            const response = await fetch(context.$url.api('categories?nested=true')) // Replace with your API endpoint
+            const response = await fetch(this.$url.api('categories?nested=true')) // Replace with your API endpoint
             if (!response.ok) {
                 throw new Error(`Failed to fetch categories: ${response.statusText}`)
             }

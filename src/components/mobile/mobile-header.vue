@@ -17,7 +17,7 @@
                     </button>
                     <AppLink to="/" class="mobile-header__logo">
                         <!-- mobile-logo -->
-                        <img :src="`http://localhost${$setting('logo').mobile}`" class="img-fluid" alt="Logo" style="width: 192px;" />
+                        <img :src="$url.img($setting('logo').mobile)" class="img-fluid" alt="Logo" style="width: 192px;" />
                         <!-- mobile-logo / end -->
                     </AppLink>
 

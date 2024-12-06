@@ -31,11 +31,11 @@ export const mutations: MutationTree<MenuState> = {
 
 // Actions
 export const actions: ActionTree<MenuState, {}> = {
-    async fetchMenus({ commit }, _, context) {
+    async fetchMenus({ commit }) {
         commit('fetchMenusStart')
         try {
             // Construct the query string for the API
-            const response = await fetch(context.$url.api('menus'))
+            const response = await fetch(this.$url.api('menus'))
             if (!response.ok) {
                 throw new Error(`Failed to fetch menus: ${response.statusText}`)
             }
