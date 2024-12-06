@@ -13,7 +13,7 @@ function getDefaultState (): CartState {
         items: [],
         quantity: 0,
         subtotal: 0,
-        shipping: 0,
+        shipping: 'Inside Dhaka',
         totals: [],
         total: 0
     }
@@ -120,7 +120,7 @@ export const mutations: MutationTree<CartState> = {
             {
                 type: 'shipping',
                 title: 'Shipping',
-                price: state.shipping
+                price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
             }
         ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
@@ -140,7 +140,7 @@ export const mutations: MutationTree<CartState> = {
             {
                 type: 'shipping',
                 title: 'Shipping',
-                price: state.shipping
+                price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
             }
         ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
@@ -168,7 +168,7 @@ export const mutations: MutationTree<CartState> = {
                 {
                     type: 'shipping',
                     title: 'Shipping',
-                    price: state.shipping
+                    price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
                 }
             ] // calcTotals(state.items)
             state.total = calcTotal(state.subtotal, state.totals)
@@ -180,7 +180,7 @@ export const mutations: MutationTree<CartState> = {
             {
                 type: 'shipping',
                 title: 'Shipping',
-                price: state.shipping
+                price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
             }
         ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
@@ -216,13 +216,15 @@ export const actions: ActionTree<CartState, {}> = {
         })
     },
     updateShipping({ commit }, payload) {
-        console.log('update shipping')
-        commit('updateShipping', parseInt(payload))
+        commit('updateShipping', payload)
     }
 }
 
 export const getters: GetterTree<CartState, {}> = {
     quantity (store) {
         return store.quantity
+    },
+    shipping(store) {
+        return store.shipping
     }
 }

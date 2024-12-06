@@ -15,7 +15,7 @@ export const actions: ActionTree<{}, {}> = {
         console.log('nuxtServerInit is called!');
         await dispatch('department/fetchCategories');
         await dispatch('setting/fetchSettings', [
-            'logo', 'company', 'social', 'scroll_text',
+            'logo', 'company', 'social', 'scroll_text', 'delivery_charge',
         ]);
         await dispatch('menu/fetchMenus');
     }

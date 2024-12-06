@@ -16,6 +16,7 @@
                         <div class="col-12 col-lg-6 col-xl-7">
                             <div class="card mb-lg-0">
                                 <div class="p-3 card-body">
+                                    <div class="text-center text-danger" v-text="error" />
                                     <div class="mb-2 text-center border text-danger" style="padding: 2px 10px; font-size: 1.25rem;">
                                         নিচের তথ্যগুলো সঠিকভাবে পূরণ করে <strong>কনফার্ম অর্ডার</strong> বাটনে ক্লিক করুন।
                                     </div>
@@ -24,10 +25,8 @@
                                             <label>আপনার নাম: <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="form-group col-md-9">
-                                            <input name="name" type="text" id="name" class="form-control is-invalid" wire:model="name" place-holder="এখানে আপনার নাম লিখুন।" placeholder="Type your name here.">
-                                            <div class="invalid-feedback">
-                                                The name field is required.
-                                            </div>
+                                            <input v-model="form.name" type="text" id="name" :class="['form-control', {'is-invalid': errors.name}]" wire:model="name" place-holder="এখানে আপনার নাম লিখুন।" placeholder="Type your name here.">
+                                            <div v-if="errors.name" class="invalid-feedback" v-text="errors.name[0]" />
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -37,10 +36,8 @@
                                         <div class="form-group col-md-9">
                                             <div class="input-group">
                                                 <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
-                                                <input name="phone" type="tel" id="phone" class="form-control is-invalid" wire:model="phone" place-holder="আপনার ফোন নম্বর লিখুন।" placeholder="Type your phone number.">
-                                                <div class="invalid-feedback">
-                                                    The phone field is required.
-                                                </div>
+                                                <input v-model="form.phone" type="tel" id="phone" :class="['form-control', {'is-invalid': errors.phone}]" wire:model="phone" place-holder="আপনার ফোন নম্বর লিখুন।" placeholder="Type your phone number.">
+                                                <div v-if="errors.phone" class="invalid-feedback" v-text="errors.phone[0]" />
                                             </div>
                                         </div>
                                     </div>
@@ -51,19 +48,17 @@
                                             </label>
                                         </div>
                                         <div class="form-group col-md-9">
-                                            <div class="h-auto form-control is-invalid">
+                                            <div :class="['h-auto form-control', {'is-invalid': errors.shipping}]">
                                                 <div class="custom-control custom-radio custom-control-inline">
-                                                    <input type="radio" @click="updateShipping('Inside Dhaka')" class="custom-control-input" id="inside-dhaka" name="shipping" value="Inside Dhaka">
-                                                    <label class="custom-control-label" for="inside-dhaka">ঢাকা শহর <!--[if BLOCK]><![endif]--> ({{ $setting('delivery_charge', {inside_dhaka: 0}).inside_dhaka }} টাকা) <!--[if ENDBLOCK]><![endif]--></label>
+                                                    <input type="radio" @click="() => $store.dispatch('cart/updateShipping', 'Inside Dhaka')" class="custom-control-input" id="inside-dhaka" name="shipping" value="Inside Dhaka" v-bind:checked="cart.shipping == 'Inside Dhaka'">
+                                                    <label class="custom-control-label" for="inside-dhaka">ঢাকা শহর <!--[if BLOCK]><![endif]--> ({{ $setting('delivery_charge').inside_dhaka }} টাকা) <!--[if ENDBLOCK]><![endif]--></label>
                                                 </div>
                                                 <div class="custom-control custom-radio custom-control-inline">
-                                                    <input type="radio" @click="updateShipping('Outside Dhaka')" class="custom-control-input" id="outside-dhaka" name="shipping" value="Outside Dhaka">
-                                                    <label class="custom-control-label" for="outside-dhaka">ঢাকার বাইরে <!--[if BLOCK]><![endif]--> ({{ $setting('delivery_charge', {outside_dhaka: 0}).outside_dhaka }} টাকা) <!--[if ENDBLOCK]><![endif]--></label>
+                                                    <input type="radio" @click="() => $store.dispatch('cart/updateShipping', 'Outside Dhaka')" class="custom-control-input" id="outside-dhaka" name="shipping" value="Outside Dhaka" v-bind:checked="cart.shipping == 'Outside Dhaka'">
+                                                    <label class="custom-control-label" for="outside-dhaka">ঢাকার বাইরে <!--[if BLOCK]><![endif]--> ({{ $setting('delivery_charge').outside_dhaka }} টাকা) <!--[if ENDBLOCK]><![endif]--></label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">
-                                                The shipping field is required.
-                                            </div>
+                                            <div v-if="errors.shipping" class="invalid-feedback" v-text="errors.shipping[0]" />
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -71,10 +66,8 @@
                                             <label>আপনার ঠিকানা: <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="form-group col-md-9">
-                                            <textarea name="address" id="address" rows="3" class="form-control is-invalid" wire:model="address" place-holder="এখানে আপনার পুরো ঠিকানা লিখুন।" placeholder="Type your address here."></textarea>
-                                            <div class="invalid-feedback">
-                                                The address field is required.
-                                            </div>
+                                            <textarea v-model="form.address" id="address" rows="3" :class="['form-control', {'is-invalid': errors.address}]" wire:model="address" place-holder="এখানে আপনার পুরো ঠিকানা লিখুন।" placeholder="Type your address here."></textarea>
+                                            <div v-if="errors.address" class="invalid-feedback" v-text="errors.address[0]" />
                                         </div>
                                     </div>
                                     <!--[if ENDBLOCK]><![endif]-->
@@ -238,8 +231,10 @@
 
 <script lang="ts">
 
+import axios from 'axios'
 import { Vue, Component } from 'vue-property-decorator'
-import { Action, State } from 'vuex-class'
+import { State } from 'vuex-class'
+import { Quantity } from '../cart.vue'
 import { IPayment } from '~/interfaces/payment'
 import { RootState } from '~/store'
 import { Cart, CartItem } from '~/interfaces/cart'
@@ -248,7 +243,6 @@ import AppLink from '~/components/shared/app-link.vue'
 import Collapse from '~/components/shared/collapse.vue'
 import Check9x7Svg from '~/svg/check-9x7.svg'
 import dataShopPayments from '~/data/shopPayments'
-import { Quantity } from '../cart.vue'
 import AsyncAction from '~/components/shared/async-action.vue'
 import Cross12Svg from '~/svg/cross-12.svg'
 import InputNumber from '~/components/shared/input-number.vue'
@@ -263,19 +257,26 @@ import InputNumber from '~/components/shared/input-number.vue'
 })
 export default class Page extends Vue {
     @State((store: RootState) => store.cart) cart!: Cart
-    @Action('setting/fetchSettings') fetchSettings!: Function
 
     form: {
         name: string
         phone: string
         address: string
         shipping: string
+        cart: {
+            id: number
+            quantity: number
+        }[]
     } = {
         name: '',
         phone: '',
         address: '',
-        shipping: ''
+        shipping: 'Inside Dhaka',
+        cart: []
     }
+
+    errors: [] = []
+    error: string = ''
 
     quantities: Quantity[] = []
 
@@ -290,10 +291,6 @@ export default class Page extends Vue {
         if (this.cart.quantity < 1) {
             this.$router.push(this.$url.cart())
         }
-    }
-
-    mounted() {
-        this.fetchSettings(['delivery_charge'])
     }
 
     async updateQuantities () {
@@ -345,23 +342,35 @@ export default class Page extends Vue {
         }
     }
 
-    updateShipping(area) {
-        this.form.shipping = area
-        if (area == 'Inside Dhaka') {
-            $store.dispatch('cart/updateShipping', $setting('delivery_charge', {inside_dhaka: 0}).inside_dhaka)
-        } else if (area == 'Outside Dhaka') {
-            $store.dispatch('cart/updateShipping', $setting('delivery_charge', {outside_dhaka: 0}).outside_dhaka)
-        }
-    }
-
     async submit() {
-        await console.log(this.cart)
-        // await this.$store.dispatch('cart/checkout', {
-        //     ...this.form,
-        //     payment: this.currentPayment
-        // })
-
-        // this.$router.push(this.$url.orderReceived())
+        this.errors = []
+        this.error = ''
+        // merge cart with form
+        this.form = {
+            ...this.form,
+            shipping: this.cart.shipping,
+            cart: this.cart.items.map((x: CartItem) => ({
+                id: x.product.id,
+                quantity: x.quantity
+            }))
+        }
+        axios.post(this.$url.api('checkout'), this.form)
+            .then(response => {
+                // redirect to success page
+                console.log(response.data.order.id)
+                this.$router.push('/shop/checkout/success?order_id='+response.data.order.id)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    if (error.response.data.errors) {
+                        this.errors = error.response.data.errors
+                    } else {
+                        this.error = error.response.data.message
+                    }
+                } else {
+                    console.log(error)
+                }
+            })
     }
 }
 
