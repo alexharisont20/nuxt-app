@@ -81,7 +81,7 @@ import LayoutError from '~/layouts/error.vue'
 @Component({
     components: { PageHeader, AppLink, LayoutError },
     async asyncData(context: Context) {
-        return { page: await fetch(`http://localhost/api/page${context.route.path}`).then(response => response.json()) }
+        return { page: await fetch(context.$url.api(`page${context.route.path}`)).then(response => response.json()) }
     },
     head() {
         return {

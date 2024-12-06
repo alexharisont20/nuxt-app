@@ -47,10 +47,10 @@ export const mutations: MutationTree<SlideState> = {
 
 // Actions
 export const actions: ActionTree<SlideState, {}> = {
-    async fetchSlides({ commit }) {
+    async fetchSlides({ commit }, _, context) {
         commit('fetchSlidesStart')
         try {
-            const response = await fetch('http://localhost/api/slides') // Replace with your API endpoint
+            const response = await fetch(context.$url.api('slides')) // Replace with your API endpoint
             if (!response.ok) {
                 throw new Error(`Failed to fetch slides: ${response.statusText}`)
             }

@@ -121,6 +121,9 @@ function make (context: Context) {
 
             return url
         },
+        api(url: string) {
+            return 'http://localhost/api/' + url
+        },
         img (url: string) {
             return this.base(url)
         }

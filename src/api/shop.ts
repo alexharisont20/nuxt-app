@@ -58,7 +58,7 @@ function make (context: Context) {
              * where:
              * - 2 = options.depth
              */
-            return fetch(`http://localhost/api/categories?${qs.stringify(options)}`)
+            return fetch(context.$url.api(`categories?${qs.stringify(options)}`))
                 .then(response => response.json())
 
             // This is for demonstration purposes only. Remove it and use the code above.
@@ -79,7 +79,7 @@ function make (context: Context) {
              */
             slug = encodeURIComponent(slug);
 
-            return fetch(`http://localhost/api/categories/${slug}.json?${qs.stringify(options)}`)
+            return fetch(context.$url.api(`categories/${slug}.json?${qs.stringify(options)}`))
                 .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
@@ -99,14 +99,14 @@ function make (context: Context) {
              */
             slug = encodeURIComponent(slug);
 
-            return fetch(`http://localhost/api/products/${slug}.json`)
+            return fetch(context.$url.api(`products/${slug}.json`))
                 .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
             // return getProductBySlug(slug)
         },
         getProductVariation: (slug: string, options: Object): Promise<IProduct> => {
-            return fetch(`http://localhost/api/products/${slug}.json?${qs.stringify(options)}`)
+            return fetch(context.$url.api(`products/${slug}.json?${qs.stringify(options)}`))
                 .then((response) => response.json());
         },
         /**
@@ -124,7 +124,7 @@ function make (context: Context) {
              */
             slug = encodeURIComponent(slug);
 
-            return fetch(`http://localhost/api/products/${slug}/related.json?${qs.stringify(options)}`)
+            return fetch(context.$url.api(`products/${slug}/related.json?${qs.stringify(options)}`))
                 .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.
@@ -157,7 +157,7 @@ function make (context: Context) {
                 }
             })
 
-            return fetch('http://localhost/api/shop?' + qs.stringify(params))
+            return fetch(context.$url.api(`shop?${qs.stringify(params)}`))
                 .then(response => response.json())
                 .then(({data, meta}) => ({
                     filters: [],
@@ -283,7 +283,7 @@ function make (context: Context) {
              * - 5           = options.limit
              * - power-tools = options.category
              */
-            return fetch(`http://localhost/api/search/suggestions.json?${qs.stringify({ ...options, query })}`)
+            return fetch(context.$url.api(`search/suggestions.json?${qs.stringify({ ...options, query })}`))
                 .then((response) => response.json());
 
             // This is for demonstration purposes only. Remove it and use the code above.

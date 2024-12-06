@@ -112,15 +112,12 @@ export default class BlockSection extends Vue {
         sectionId: number;
         id: number;
     }): Promise<IProduct[]> {
-        console.log(tab);
-        return fetch(
-            `http://localhost/api/sections/${tab.sectionId}/products?category=${tab.id}`
-        )
+        return fetch(this.$url.api(`sections/${tab.sectionId}/products?category=${tab.id}`))
             .then(response => response.json())
             .catch(error => {
-                console.error("Error fetching section products:", error);
-                return [];
-            });
+                console.error('Error fetching section products:', error)
+                return []
+            })
     }
 }
 
