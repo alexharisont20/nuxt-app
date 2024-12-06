@@ -13,6 +13,7 @@ function getDefaultState (): CartState {
         items: [],
         quantity: 0,
         subtotal: 0,
+        shipping: 0,
         totals: [],
         total: 0
     }
@@ -77,7 +78,7 @@ function calcTotals (items: CartItem[]): CartTotal[] {
         {
             type: 'shipping',
             title: 'Shipping',
-            price: 25
+            price: 0
         },
         {
             type: 'tax',
@@ -115,7 +116,13 @@ export const mutations: MutationTree<CartState> = {
 
         state.quantity = calcQuantity(state.items)
         state.subtotal = calcSubtotal(state.items)
-        state.totals = calcTotals(state.items)
+        state.totals = [
+            {
+                type: 'shipping',
+                title: 'Shipping',
+                price: state.shipping
+            }
+        ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
 
         Vue.notify({
@@ -129,7 +136,13 @@ export const mutations: MutationTree<CartState> = {
         state.items = state.items.filter(item => item.id !== itemId)
         state.quantity = calcQuantity(state.items)
         state.subtotal = calcSubtotal(state.items)
-        state.totals = calcTotals(state.items)
+        state.totals = [
+            {
+                type: 'shipping',
+                title: 'Shipping',
+                price: state.shipping
+            }
+        ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
     },
     updateQuantities (state, payload: CartUpdateQuantitiesPayload) {
@@ -151,9 +164,26 @@ export const mutations: MutationTree<CartState> = {
         if (needUpdate) {
             state.quantity = calcQuantity(state.items)
             state.subtotal = calcSubtotal(state.items)
-            state.totals = calcTotals(state.items)
+            state.totals = [
+                {
+                    type: 'shipping',
+                    title: 'Shipping',
+                    price: state.shipping
+                }
+            ] // calcTotals(state.items)
             state.total = calcTotal(state.subtotal, state.totals)
         }
+    },
+    updateShipping (state, payload) {
+        state.shipping = payload
+        state.totals = [
+            {
+                type: 'shipping',
+                title: 'Shipping',
+                price: state.shipping
+            }
+        ] // calcTotals(state.items)
+        state.total = calcTotal(state.subtotal, state.totals)
     }
 }
 
@@ -184,6 +214,10 @@ export const actions: ActionTree<CartState, {}> = {
                 resolve()
             }, 500)
         })
+    },
+    updateShipping({ commit }, payload) {
+        console.log('update shipping')
+        commit('updateShipping', parseInt(payload))
     }
 }
 

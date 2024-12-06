@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="dropcart__buttons">
-                    <AppLink :to="$url.cart()" class="btn btn-secondary">
+                    <AppLink :to="$url.cart()" class="btn btn-secondary d-none">
                         View Cart
                     </AppLink>
                     <AppLink :to="$url.checkout()" class="btn btn-primary">

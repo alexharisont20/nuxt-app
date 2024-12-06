@@ -33,7 +33,7 @@ function make (context: Context) {
             return '/shop/cart'
         },
         checkout () {
-            return '/checkout'
+            return '/shop/checkout'
         },
         wishlist () {
             return '/shop/wishlist'

@@ -53,12 +53,12 @@
                                         <div class="form-group col-md-9">
                                             <div class="h-auto form-control is-invalid">
                                                 <div class="custom-control custom-radio custom-control-inline">
-                                                    <input type="radio" wire:model.live="shipping" class="custom-control-input" id="inside-dhaka" name="shipping" value="Inside Dhaka">
-                                                    <label class="custom-control-label" for="inside-dhaka">ঢাকা শহর <!--[if BLOCK]><![endif]--> (70 টাকা) <!--[if ENDBLOCK]><![endif]--></label>
+                                                    <input type="radio" @click="updateShipping('Inside Dhaka')" class="custom-control-input" id="inside-dhaka" name="shipping" value="Inside Dhaka">
+                                                    <label class="custom-control-label" for="inside-dhaka">ঢাকা শহর <!--[if BLOCK]><![endif]--> ({{ $setting('delivery_charge', {inside_dhaka: 0}).inside_dhaka }} টাকা) <!--[if ENDBLOCK]><![endif]--></label>
                                                 </div>
                                                 <div class="custom-control custom-radio custom-control-inline">
-                                                    <input type="radio" wire:model.live="shipping" class="custom-control-input" id="outside-dhaka" name="shipping" value="Outside Dhaka">
-                                                    <label class="custom-control-label" for="outside-dhaka">ঢাকার বাইরে <!--[if BLOCK]><![endif]--> (130 টাকা) <!--[if ENDBLOCK]><![endif]--></label>
+                                                    <input type="radio" @click="updateShipping('Outside Dhaka')" class="custom-control-input" id="outside-dhaka" name="shipping" value="Outside Dhaka">
+                                                    <label class="custom-control-label" for="outside-dhaka">ঢাকার বাইরে <!--[if BLOCK]><![endif]--> ({{ $setting('delivery_charge', {outside_dhaka: 0}).outside_dhaka }} টাকা) <!--[if ENDBLOCK]><![endif]--></label>
                                                 </div>
                                             </div>
                                             <div class="invalid-feedback">
@@ -78,80 +78,6 @@
                                         </div>
                                     </div>
                                     <!--[if ENDBLOCK]><![endif]-->
-                                    <h3 class="card-title">
-                                        Billing details
-                                    </h3>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="checkout-first-name">First Name</label>
-                                            <input
-                                                id="checkout-first-name"
-                                                class="form-control"
-                                                type="text"
-                                                placeholder="First Name"
-                                            >
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="checkout-last-name">Last Name</label>
-                                            <input
-                                                id="checkout-last-name"
-                                                class="form-control"
-                                                type="text"
-                                                placeholder="Last Name"
-                                            >
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="checkout-company-name">
-                                            Company Name
-                                            <span class="text-muted">(Optional)</span>
-                                        </label>
-                                        <input
-                                            id="checkout-company-name"
-                                            class="form-control"
-                                            type="text"
-                                            placeholder="Company Name"
-                                        >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="checkout-street-address">Street Address</label>
-                                        <input
-                                            id="checkout-street-address"
-                                            class="form-control"
-                                            type="text"
-                                            placeholder="Street Address"
-                                        >
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="checkout-email">Email address</label>
-                                            <input
-                                                id="checkout-email"
-                                                class="form-control"
-                                                type="email"
-                                                placeholder="Email address"
-                                            >
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="checkout-phone">Phone</label>
-                                            <input
-                                                id="checkout-phone"
-                                                class="form-control"
-                                                type="text"
-                                                placeholder="Phone"
-                                            >
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="checkout-comment">
-                                            Order notes
-                                            <span class="text-muted">(Optional)</span>
-                                        </label>
-                                        <textarea id="checkout-comment" class="form-control" :rows="4" />
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,7 +145,7 @@
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary btn-xl btn-block">
+                                    <button type="submit" @click="submit" class="btn btn-primary btn-xl btn-block">
                                         Place Order
                                     </button>
                                 </div>
@@ -313,7 +239,7 @@
 <script lang="ts">
 
 import { Vue, Component } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Action, State } from 'vuex-class'
 import { IPayment } from '~/interfaces/payment'
 import { RootState } from '~/store'
 import { Cart, CartItem } from '~/interfaces/cart'
@@ -337,6 +263,19 @@ import InputNumber from '~/components/shared/input-number.vue'
 })
 export default class Page extends Vue {
     @State((store: RootState) => store.cart) cart!: Cart
+    @Action('setting/fetchSettings') fetchSettings!: Function
+
+    form: {
+        name: string
+        phone: string
+        address: string
+        shipping: string
+    } = {
+        name: '',
+        phone: '',
+        address: '',
+        shipping: ''
+    }
 
     quantities: Quantity[] = []
 
@@ -351,6 +290,10 @@ export default class Page extends Vue {
         if (this.cart.quantity < 1) {
             this.$router.push(this.$url.cart())
         }
+    }
+
+    mounted() {
+        this.fetchSettings(['delivery_charge'])
     }
 
     async updateQuantities () {
@@ -400,6 +343,25 @@ export default class Page extends Vue {
                 input.focus()
             }, 500)
         }
+    }
+
+    updateShipping(area) {
+        this.form.shipping = area
+        if (area == 'Inside Dhaka') {
+            $store.dispatch('cart/updateShipping', $setting('delivery_charge', {inside_dhaka: 0}).inside_dhaka)
+        } else if (area == 'Outside Dhaka') {
+            $store.dispatch('cart/updateShipping', $setting('delivery_charge', {outside_dhaka: 0}).outside_dhaka)
+        }
+    }
+
+    async submit() {
+        await console.log(this.cart)
+        // await this.$store.dispatch('cart/checkout', {
+        //     ...this.form,
+        //     payment: this.currentPayment
+        // })
+
+        // this.$router.push(this.$url.orderReceived())
     }
 }
 

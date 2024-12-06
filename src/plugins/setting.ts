@@ -12,9 +12,9 @@ export default ({ store }: Context, inject: (key: string, value: any) => void) =
         // await store.dispatch('setting/fetchSettings', ['logo', 'company'])
 
         // Inject $setting for global use
-        const $setting = (key: string) => {
+        const $setting = (key: string, _default: any) => {
             const state = store.state.setting
-            return state.settings[key]
+            return state.settings[key] || _default
         }
 
         inject('setting', $setting)
