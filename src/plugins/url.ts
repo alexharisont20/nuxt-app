@@ -114,21 +114,21 @@ function make (context: Context) {
         terms () {
             return '/site/terms'
         },
-        base (url: string) {
+        base(url: string) {
             if (url[0] === '/') {
-                return context.base + url.substr(1)
+                return context.base + url.substring(1)
             }
 
             return url
         },
         api(url: string) {
-            return 'http://localhost/api' + (url[0] === '/' ? '' : '/') + url
+            return context.env.routerApi + (url[0] === '/' ? url.substring(1) : url)
         },
         img(url: string) {
             if (/^https?:\/\//.test(url)) {
                 return url
             }
-            return 'http://localhost' + (url[0] === '/' ? '' : '/') + url
+            return context.env.routerAsset + (url[0] === '/' ? url.substring(1) : url)
         }
     }
 }
