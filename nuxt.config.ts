@@ -11,6 +11,7 @@ const envRouterApi = process.env.ROUTER_API || 'https://www.tcom1.cyber32.net/ap
 
 // noinspection JSUnusedGlobalSymbols
 const config: NuxtConfig = {
+    buildDir: '.output',
     env: {
         routerBase: envRouterBase,
         routerAsset: envRouterAsset,
