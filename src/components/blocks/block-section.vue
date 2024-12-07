@@ -23,14 +23,30 @@
                 }
             ]"
         >
-            <BlockHeader
-                :title="section.title"
-                :groups="section.categories"
-                arrows
-                @next="() => {}"
-                @prev="() => {}"
-                @group-click="$emit('groupClick', $event)"
-            />
+            <div class="block-header">
+                <h3 class="block-header__title">
+                    <AppLink
+                        :to="`/shop?filter_section=${ section.id }`"
+                        class="text-dark"
+                    >
+                        {{ section.title }}
+                    </AppLink>
+                </h3>
+                <div class="block-header__divider" />
+
+                <ul class="block-header__groups-list">
+                    <li>
+                        <AppLink
+                            :to="`/shop?filter_section=${ section.id }`"
+                            :class="[
+                                'block-header__group',
+                            ]"
+                        >
+                            View All
+                        </AppLink>
+                    </li>
+                </ul>
+            </div>
             <div class="products-view__content">
                 <div
                     class="products-view__list products-list"
@@ -64,9 +80,11 @@ import ProductCard from '../shared/product-card.vue'
 import BlockProductsCarouselContainer from './block-products-carousel-container.vue'
 import BlockProductsCarousel from './block-products-carousel.vue'
 import BlockHeader from '../shared/block-header.vue'
+import AppLink from '../shared/app-link.vue'
 
 @Component({
     components: {
+        AppLink,
         ProductCard,
         BlockHeader,
         BlockProductsCarouselContainer,
@@ -94,15 +112,12 @@ export default class BlockSection extends Vue {
         sectionId: number;
         id: number;
     }): Promise<IProduct[]> {
-        console.log(tab);
-        return fetch(
-            `http://localhost/api/sections/${tab.sectionId}/products?category=${tab.id}`
-        )
+        return fetch(this.$url.api(`sections/${tab.sectionId}/products?category=${tab.id}`))
             .then(response => response.json())
             .catch(error => {
-                console.error("Error fetching section products:", error);
-                return [];
-            });
+                console.error('Error fetching section products:', error)
+                return []
+            })
     }
 }
 

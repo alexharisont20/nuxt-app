@@ -33,7 +33,7 @@ function make (context: Context) {
             return '/shop/cart'
         },
         checkout () {
-            return '/checkout'
+            return '/shop/checkout'
         },
         wishlist () {
             return '/shop/wishlist'
@@ -114,15 +114,21 @@ function make (context: Context) {
         terms () {
             return '/site/terms'
         },
-        base (url: string) {
+        base(url: string) {
             if (url[0] === '/') {
-                return context.base + url.substr(1)
+                return context.base + url.substring(1)
             }
 
             return url
         },
-        img (url: string) {
-            return this.base(url)
+        api(url: string) {
+            return context.env.routerApi + (url[0] === '/' ? url.substring(1) : url)
+        },
+        img(url: string) {
+            if (/^https?:\/\//.test(url)) {
+                return url
+            }
+            return context.env.routerAsset + (url[0] === '/' ? url.substring(1) : url)
         }
     }
 }
@@ -136,6 +142,14 @@ declare module 'vue/types/vue' {
 declare module '@nuxt/types' {
     interface Context {
         $url: ReturnType<typeof make> & Context
+    }
+}
+
+declare module 'vuex' {
+    interface Store<S> {
+        $url: {
+            api: (path: string) => string;
+        };
     }
 }
 

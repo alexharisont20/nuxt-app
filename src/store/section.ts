@@ -47,7 +47,7 @@ export const actions: ActionTree<SectionState, {}> = {
     async fetchSections({ commit }) {
         commit('fetchSectionsStart')
         try {
-            const response = await fetch('http://localhost/api/sections') // Replace with your API endpoint
+            const response = await fetch(this.$url.api('sections')) // Replace with your API endpoint
             if (!response.ok) {
                 throw new Error(`Failed to fetch sections: ${response.statusText}`)
             }

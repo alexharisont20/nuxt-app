@@ -1,7 +1,7 @@
 <template>
     <div class="block order-success">
         <div class="container">
-            <div class="order-success__body">
+            <div v-if="order" class="order-success__body">
                 <div class="order-success__header">
                     <Check100Svg class="order-success__icon" />
                     <h1 class="order-success__title">
@@ -32,8 +32,8 @@
                             <span class="order-success__meta-value">{{ order.total }}</span>
                         </li>
                         <li class="order-success__meta-item">
-                            <span class="order-success__meta-title">Payment method:</span>
-                            <span class="order-success__meta-value">{{ order.paymentMethod }}</span>
+                            <span class="order-success__meta-title">Status:</span>
+                            <span class="order-success__meta-value">{{ order.status }}</span>
                         </li>
                     </ul>
                 </div>
@@ -125,23 +125,6 @@
                         </table>
                     </div>
                 </div>
-
-                <div class="row mt-3 no-gutters mx-n2">
-                    <div class="col-sm-6 col-12 px-2">
-                        <AddressCard
-                            :address="order.shippingAddress"
-                            badge="Shipping Address"
-                            :badge-muted="true"
-                        />
-                    </div>
-                    <div class="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
-                        <AddressCard
-                            :address="order.billingAddress"
-                            badge="Billing Address"
-                            :badge-muted="true"
-                        />
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -152,12 +135,11 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { IOrder } from '~/interfaces/order'
 import AppLink from '~/components/shared/app-link.vue'
-import AddressCard from '~/components/shared/address-card.vue'
 import Check100Svg from '~/svg/check-100.svg'
 import dataAccountOrderDetails from '~/data/accountOrderDetails'
 
 @Component({
-    components: { Check100Svg, AppLink, AddressCard },
+    components: { Check100Svg, AppLink },
     head () {
         return {
             title: 'Order Success'
@@ -165,7 +147,41 @@ import dataAccountOrderDetails from '~/data/accountOrderDetails'
     }
 })
 export default class Page extends Vue {
-    order: IOrder = dataAccountOrderDetails
+    order = {
+        id: 0,
+        date: '',
+        status: '',
+        items: [],
+        additionalLines: [
+            {
+                label: 'Shipping',
+                total: 0
+            }
+        ],
+        subtotal: 0,
+        total: 0
+    }
+
+    async mounted() {
+        await fetch(this.$url.api('orders/' + this.$route.query.order_id))
+            .then(response => response.json())
+            .then(data => {
+                this.order = {
+                    id: data.id,
+                    date: data.created_at,
+                    status: data.status,
+                    items: Object.values(data.products),
+                    additionalLines: [
+                        {
+                            label: 'Shipping',
+                            total: parseInt(data.data.shipping_cost)
+                        }
+                    ],
+                    subtotal: parseInt(data.data.subtotal),
+                    total: parseInt(data.data.subtotal) + parseInt(data.data.shipping_cost),
+                }
+            })
+    }
 }
 
 </script>

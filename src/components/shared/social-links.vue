@@ -26,11 +26,10 @@ export default class SocialLinks extends Vue {
     @Prop({ type: String, default: () => 'circle' }) readonly shape!: Shape
 
     items = [
-        { type: 'rss', icon: 'fas fa-rss', url: theme.author.profile_url },
-        { type: 'youtube', icon: 'fab fa-youtube', url: theme.author.profile_url },
-        { type: 'facebook', icon: 'fab fa-facebook-f', url: theme.author.profile_url },
-        { type: 'twitter', icon: 'fab fa-twitter', url: theme.author.profile_url },
-        { type: 'instagram', icon: 'fab fa-instagram', url: theme.author.profile_url }
+        { type: 'youtube', icon: 'fab fa-youtube', url: this.$setting('social').youtube.link },
+        { type: 'facebook', icon: 'fab fa-facebook-f', url: this.$setting('social').facebook.link },
+        { type: 'twitter', icon: 'fab fa-twitter', url: this.$setting('social').twitter.link },
+        { type: 'instagram', icon: 'fab fa-instagram', url: this.$setting('social').instagram.link }
     ]
 }
 

@@ -6,32 +6,10 @@
                     <div class="col-12 col-md-6 col-lg-4">
                         <footer-contacts />
                     </div>
-                    <div class="col-6 col-md-3 col-lg-2">
+                    <div class="col-6 col-md-6 col-lg-4">
                         <footer-links
-                            title="Information"
-                            :links="[
-                                {title: 'About Us', url: ''},
-                                {title: 'Delivery Information', url: ''},
-                                {title: 'Privacy Policy', url: ''},
-                                {title: 'Brands', url: ''},
-                                {title: 'Contact Us', url: ''},
-                                {title: 'Returns', url: ''},
-                                {title: 'Site Map', url: ''}
-                            ]"
-                        />
-                    </div>
-                    <div class="col-6 col-md-3 col-lg-2">
-                        <footer-links
-                            title="My Account"
-                            :links="[
-                                {title: 'Store Location', url: ''},
-                                {title: 'Order History', url: ''},
-                                {title: 'Wish List', url: ''},
-                                {title: 'Newsletter', url: ''},
-                                {title: 'Specials', url: ''},
-                                {title: 'Gift Certificates', url: ''},
-                                {title: 'Affiliate', url: ''}
-                            ]"
+                            title="Quick Links"
+                            :links="items"
                         />
                     </div>
                     <div class="col-12 col-md-12 col-lg-4">
@@ -43,8 +21,7 @@
             <div class="site-footer__bottom">
                 <div class="site-footer__copyright">
                     <!-- copyright -->
-                    Powered by <a href="https://vuejs.org/" target="_blank">Vue.js</a> —
-                    Design by <a :href="theme.author.profile_url" target="_blank">{{ theme.author.name }}</a>
+                    Developed by <a class="text-danger" :href="$setting('company').dev_href || 'https://cyber32.com'" target="_blank">{{ $setting('company').dev_name || 'Cyber 32' }}</a>
                     <!-- copyright / end -->
                 </div>
                 <div class="site-footer__payments">
@@ -59,6 +36,7 @@
 <script lang="ts">
 
 import { Vue, Component } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import FooterContacts from '~/components/footer/footer-contacts.vue'
 import FooterLinks from '~/components/footer/footer-links.vue'
 import FooterNewsletter from '~/components/footer/footer-newsletter.vue'
@@ -70,6 +48,13 @@ import theme from '~/data/theme'
 })
 export default class Footer extends Vue {
     theme = theme
+    @Getter('menu/getMenu') getMenu!: Function
+
+    items = []
+
+    mounted() {
+        this.items = this.getMenu('quick-links').map((x: {name: string, href: string}) => ({ title: x.name, url: x.href }))
+    }
 }
 
 </script>

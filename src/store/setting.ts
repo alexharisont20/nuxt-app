@@ -15,20 +15,15 @@ export const state = (): SettingState => ({
 
 // Mutations
 export const mutations: MutationTree<SettingState> = {
-    fetchSettingsStart (state) {
+    fetchSettingsStart(state) {
         state.isLoading = true
         state.error = null
     },
-    storeSettingsSuccess (state, settings: Object) {
-        state.isLoading = false
-        console.log('store', settings)
-        state.settings = settings
-    },
-    mergeSettings (state, settings: Object) {
+    fetchSettingsSuccess(state, settings: Object) {
         state.isLoading = false
         state.settings = { ...state.settings, ...settings }
     },
-    fetchSettingsFailure (state, error: string) {
+    fetchSettingsFailure(state, error: string) {
         state.isLoading = false
         state.error = error
     }
@@ -36,29 +31,21 @@ export const mutations: MutationTree<SettingState> = {
 
 // Actions
 export const actions: ActionTree<SettingState, {}> = {
-    async fetchSettings ({ commit, state }, { keys, merge = false }) {
-        let keysToFetch = keys
-        if (merge) {
-            // Filter out keys that are already present in `state.settings`
-            keysToFetch = keys.filter((key: string) => !(key in state.settings))
-            if (keysToFetch.length === 0) { return } // Nothing to fetch
-        }
+    async fetchSettings({ commit, state }, keys: string[]) {
+        // Filter out keys that are already present in `state.settings`
+        const keysToFetch = keys.filter(key => !(key in state.settings))
+        if (keysToFetch.length === 0) { return } // Nothing to fetch
 
         commit('fetchSettingsStart')
         try {
-            console.log('fetching settings', keys, merge)
             // Construct the query string for the API
-            const query = keysToFetch.map((key: string) => `keys[]=${encodeURIComponent(key)}`).join('&')
-            const response = await fetch(`http://localhost/api/settings?${query}`)
+            const query = keysToFetch.map(key => `keys[]=${encodeURIComponent(key)}`).join('&')
+            const response = await fetch(this.$url.api(`settings?${query}`))
             if (!response.ok) {
                 throw new Error(`Failed to fetch settings: ${response.statusText}`)
             }
             const data = await response.json()
-            if (merge) {
-                commit('mergeSettingsSuccess', data)
-            } else {
-                commit('storeSettingsSuccess', data)
-            }
+            commit('fetchSettingsSuccess', data)
         } catch (error) {
             commit('fetchSettingsFailure', error.message || 'Error fetching settings')
         }

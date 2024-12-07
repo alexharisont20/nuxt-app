@@ -6,7 +6,7 @@
             <div class="site-header__logo">
                 <AppLink to="/">
                     <!-- logo -->
-                    <img :src="`http://localhost${$setting('logo').desktop}`" class="img-fluid" alt="Logo" style="width: 260px;" />
+                    <img :src="$url.img($setting('logo').desktop)" class="img-fluid" alt="Logo" style="width: 260px;" />
                     <!-- logo / end -->
                 </AppLink>
             </div>

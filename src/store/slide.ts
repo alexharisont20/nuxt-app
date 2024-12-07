@@ -50,7 +50,7 @@ export const actions: ActionTree<SlideState, {}> = {
     async fetchSlides({ commit }) {
         commit('fetchSlidesStart')
         try {
-            const response = await fetch('http://localhost/api/slides') // Replace with your API endpoint
+            const response = await fetch(this.$url.api('slides')) // Replace with your API endpoint
             if (!response.ok) {
                 throw new Error(`Failed to fetch slides: ${response.statusText}`)
             }

@@ -1,5 +1,5 @@
 <template>
-    <div :class="`block block-features block-features--layout--${layout}`">
+    <div v-if="($setting('services') || {enabled: false}).enabled" :class="`block block-features block-features--layout--${layout}`">
         <div class="container">
             <div class="block-features__list">
                 <div class="block-features__item">
@@ -8,10 +8,10 @@
                     </div>
                     <div class="block-features__content">
                         <div class="block-features__title">
-                            Free Shipping
+                            {{ $setting('services').one.title }}
                         </div>
                         <div class="block-features__subtitle">
-                            For orders from $50
+                            {{ $setting('services').one.detail }}
                         </div>
                     </div>
                 </div>
@@ -22,10 +22,10 @@
                     </div>
                     <div class="block-features__content">
                         <div class="block-features__title">
-                            Support 24/7
+                            {{ $setting('services').two.title }}
                         </div>
                         <div class="block-features__subtitle">
-                            Call us anytime
+                            {{ $setting('services').two.detail }}
                         </div>
                     </div>
                 </div>
@@ -36,10 +36,10 @@
                     </div>
                     <div class="block-features__content">
                         <div class="block-features__title">
-                            100% Safety
+                            {{ $setting('services').three.title }}
                         </div>
                         <div class="block-features__subtitle">
-                            Only secure payments
+                            {{ $setting('services').three.detail }}
                         </div>
                     </div>
                 </div>
@@ -50,10 +50,10 @@
                     </div>
                     <div class="block-features__content">
                         <div class="block-features__title">
-                            Hot Offers
+                            {{ $setting('services').four.title }}
                         </div>
                         <div class="block-features__subtitle">
-                            Discounts up to 90%
+                            {{ $setting('services').four.detail }}
                         </div>
                     </div>
                 </div>
@@ -64,6 +64,7 @@
 
 <script lang="ts">
 
+import { Action, Getter } from 'vuex-class'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import FiFreeDelivery48Svg from '~/svg/fi-free-delivery-48.svg'
 import Fi24Hours48Svg from '~/svg/fi-24-hours-48.svg'
@@ -77,6 +78,12 @@ type BlockFeaturesLayout = 'classic' | 'boxed'
 })
 export default class BlockFeatures extends Vue {
     @Prop({ type: String, default: () => 'classic' }) layout!: BlockFeaturesLayout
+
+    @Action('setting/fetchSettings') fetchSettings!: Function
+
+    async mounted() {
+        await this.fetchSettings(['services'])
+    }
 }
 
 </script>

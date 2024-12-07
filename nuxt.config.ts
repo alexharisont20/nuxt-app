@@ -6,11 +6,15 @@ import { ILanguage } from '~/interfaces/language'
 
 const envMode = process.env.MODE as NuxtConfig['mode'] || 'universal'
 const envRouterBase = process.env.ROUTER_BASE || '/'
+const envRouterAsset = process.env.ROUTER_ASSET || 'https://www.tcom1.cyber32.net/'
+const envRouterApi = process.env.ROUTER_API || 'https://www.tcom1.cyber32.net/api/'
 
 // noinspection JSUnusedGlobalSymbols
 const config: NuxtConfig = {
     env: {
-        routerBase: envRouterBase
+        routerBase: envRouterBase,
+        routerAsset: envRouterAsset,
+        routerApi: envRouterApi
     },
     ssr: envMode === 'universal',
     target: envMode === 'universal' ? 'server' : 'static',
@@ -56,8 +60,9 @@ const config: NuxtConfig = {
 
         const options: NuxtOptionsHead = {
             title: process.env.npm_package_name || '',
-            titleTemplate (titleChunk: string) {
-                return titleChunk ? `${titleChunk} — Stroyka` : 'Stroyka'
+            titleTemplate(titleChunk: string) {
+                return titleChunk || 'E-Commerce'
+                // return titleChunk ? `${titleChunk} — Stroyka` : 'Stroyka'
             },
             htmlAttrs: {
                 lang: currentLanguage?.locale!,
@@ -111,6 +116,7 @@ const config: NuxtConfig = {
     ** Plugins to load before mounting the App
     */
     plugins: [
+        '~/plugins/context.ts',
         '~/plugins/setting.ts',
         '~/plugins/url.ts',
         '~/plugins/currency.ts',
@@ -181,6 +187,17 @@ const config: NuxtConfig = {
                         }
                     }
                 ]
+            })
+
+            // Exclude large files like icons.js from Babel processing
+            config.module.rules.push({
+                test: /icons\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        compact: false, // Disable compression for these files
+                    }
+                }
             })
         }
     },

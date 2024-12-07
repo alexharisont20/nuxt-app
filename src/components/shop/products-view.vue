@@ -15,6 +15,7 @@
                 Try resetting the filters
             </div>
             <button
+                v-if="false"
                 type="button"
                 class="btn btn-primary btn-sm"
                 @click="$store.dispatch('shop/resetFilters')"
@@ -24,7 +25,7 @@
         </div>
 
         <div v-if="productsList.items.length !== 0" class="products-view__content">
-            <div class="products-view__options">
+            <div v-if="false" class="products-view__options">
                 <div
                     :class="[
                         'view-options',

@@ -28,6 +28,7 @@ export interface Cart {
     items: CartItem[];
     quantity: number;
     subtotal: number;
+    shipping: string;
     totals: CartTotal[];
     total: number;
 }

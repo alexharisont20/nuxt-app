@@ -1,3 +1,4 @@
+import { Getter } from 'vuex-class'
 import { Vue, Component } from 'vue-property-decorator'
 import { INav, INavLink } from '~/interfaces/menus/nav'
 import Menu from '~/components/header/menu.vue'
@@ -12,6 +13,7 @@ import headerNavigation from '~/data/headerNavigation'
 export default class NavLinks extends Vue {
     items: INav = headerNavigation
     hoveredItem: INavLink | null = null
+    @Getter('menu/getMenu') getMenu!: Function
 
     get itemElements () {
         return this.$refs.items as HTMLElement[] || []

@@ -9,69 +9,71 @@
             <BlockSection :section="section" />
         </div>
 
-        <BlockProductsCarouselContainer
-            v-slot="{ products, isLoading, tabs, handleTabChange }"
-            :tabs="[
-                { id: 1, name: 'All', categorySlug: undefined },
-                { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
-                { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
-                { id: 4, name: 'Plumbing', categorySlug: 'plumbing' }
-            ]"
-            :initial-data="featuredProducts"
-            :data-source="featuredProductsSource"
-        >
-            <BlockProductsCarousel
-                title="Featured Products"
-                layout="grid-4"
-                :products="products"
-                :loading="isLoading"
-                :groups="tabs"
-                @groupClick="handleTabChange"
+        <template v-if="false">
+            <BlockProductsCarouselContainer
+                v-slot="{ products, isLoading, tabs, handleTabChange }"
+                :tabs="[
+                    { id: 1, name: 'All', categorySlug: undefined },
+                    { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
+                    { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
+                    { id: 4, name: 'Plumbing', categorySlug: 'plumbing' }
+                ]"
+                :initial-data="featuredProducts"
+                :data-source="featuredProductsSource"
+            >
+                <BlockProductsCarousel
+                    title="Featured Products"
+                    layout="grid-4"
+                    :products="products"
+                    :loading="isLoading"
+                    :groups="tabs"
+                    @groupClick="handleTabChange"
+                />
+            </BlockProductsCarouselContainer>
+
+            <BlockBanner />
+
+            <BlockProducts
+                title="Bestsellers"
+                layout="large-first"
+                :featured-product="(bestsellers || [])[0]"
+                :products="(bestsellers || []).slice(1, 7)"
             />
-        </BlockProductsCarouselContainer>
 
-        <BlockBanner />
-
-        <BlockProducts
-            title="Bestsellers"
-            layout="large-first"
-            :featured-product="(bestsellers || [])[0]"
-            :products="(bestsellers || []).slice(1, 7)"
-        />
-
-        <BlockCategories
-            title="Popular Categories"
-            layout="classic"
-            :categories="categories"
-        />
-
-        <BlockProductsCarouselContainer
-            v-slot="{ products, isLoading, tabs, handleTabChange }"
-            :tabs="[
-                { id: 1, name: 'All', categorySlug: undefined },
-                { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
-                { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
-                { id: 4, name: 'Plumbing', categorySlug: 'plumbing' }
-            ]"
-            :initial-data="latestProducts"
-            :data-source="latestProductsSource"
-        >
-            <BlockProductsCarousel
-                title="New Arrivals"
-                layout="horizontal"
-                :rows="2"
-                :products="products"
-                :loading="isLoading"
-                :groups="tabs"
-                @groupClick="handleTabChange"
+            <BlockCategories
+                title="Popular Categories"
+                layout="classic"
+                :categories="categories"
             />
-        </BlockProductsCarouselContainer>
 
-        <BlockPosts title="Latest News" layout="list" :posts="posts" />
+            <BlockProductsCarouselContainer
+                v-slot="{ products, isLoading, tabs, handleTabChange }"
+                :tabs="[
+                    { id: 1, name: 'All', categorySlug: undefined },
+                    { id: 2, name: 'Power Tools', categorySlug: 'power-tools' },
+                    { id: 3, name: 'Hand Tools', categorySlug: 'hand-tools' },
+                    { id: 4, name: 'Plumbing', categorySlug: 'plumbing' }
+                ]"
+                :initial-data="latestProducts"
+                :data-source="latestProductsSource"
+            >
+                <BlockProductsCarousel
+                    title="New Arrivals"
+                    layout="horizontal"
+                    :rows="2"
+                    :products="products"
+                    :loading="isLoading"
+                    :groups="tabs"
+                    @groupClick="handleTabChange"
+                />
+            </BlockProductsCarouselContainer>
 
-        <BlockBrands />
+            <BlockPosts title="Latest News" layout="list" :posts="posts" />
 
-        <BlockProductColumns :columns="columns" />
+            <BlockBrands />
+
+            <BlockProductColumns :columns="columns" />
+        </template>
     </div>
 </template>
 
@@ -179,7 +181,7 @@ export default class HomePageOne extends Vue {
 
     async fetchSections() {
         try {
-            const response = await fetch("http://localhost/api/sections");
+            const response = await fetch(this.$url.api("sections"));
             response.json().then(data => {
                 this.sections = data;
             });

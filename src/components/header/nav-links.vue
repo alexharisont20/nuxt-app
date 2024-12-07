@@ -2,11 +2,32 @@
     <div class="nav-links">
         <ul class="nav-links__list">
             <li
-                v-for="(item, index) in items"
+                v-for="(item, index) in getMenu('header-menu')"
                 ref="items"
                 :key="index"
                 :class="[
                     'nav-links__item',
+                    {
+                        'nav-links__item--has-submenu': item.submenu,
+                        'nav-links__item--hover': item === hoveredItem,
+                    }
+                ]"
+                @mouseenter="onItemMouseEnter(item)"
+                @mouseleave="onItemMouseLeave(item)"
+            >
+                <AppLink class="nav-links__item-link" :to="item.href">
+                    <div class="nav-links__item-body">
+                        {{ item.name }}
+                        <ArrowRoundedDown9x6Svg v-if="item.submenu" class="nav-links__item-arrow" />
+                    </div>
+                </AppLink>
+            </li>
+            <li
+                v-for="(item, index) in []"
+                ref="items"
+                :key="index"
+                :class="[
+                    'd-none nav-links__item',
                     {
                         'nav-links__item--has-submenu': item.submenu,
                         'nav-links__item--hover': item === hoveredItem,

@@ -10,7 +10,7 @@
                 <div v-if="layout === 'compact'" class="nav-panel__logo">
                     <AppLink to="/">
                         <!-- logo -->
-                        <img :src="`http://localhost${$setting('logo').mobile}`" class="img-fluid" alt="Logo" style="width: 192px;" >
+                        <img :src="$url.img($setting('logo').mobile)" class="img-fluid" alt="Logo" style="width: 192px;" >
                         <!-- logo / end -->
                     </AppLink>
                 </div>
@@ -64,7 +64,7 @@
                         <Dropcart v-if="dropcartType === 'dropdown'" />
                     </Indicator>
 
-                    <Indicator ref="accountIndicator" :to="$url.accountDashboard()" trigger="click">
+                    <Indicator v-if="false" ref="accountIndicator" :to="$url.accountDashboard()" trigger="click">
                         <template #icon>
                             <Person20Svg />
                         </template>
