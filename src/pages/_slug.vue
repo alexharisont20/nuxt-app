@@ -78,17 +78,29 @@ import PageHeader from '~/components/shared/page-header.vue'
 import AppLink from '~/components/shared/app-link.vue'
 import LayoutError from '~/layouts/error.vue'
 
+interface PageData {
+    title: string
+    slug: string
+    content: string
+    message?: string
+}
+
 @Component({
-    components: { PageHeader, AppLink, LayoutError },
-    async asyncData(context: Context) {
-        return { page: await fetch(context.$url.api(`page${context.route.path}`)).then(response => response.json()) }
-    },
-    head() {
+    components: { PageHeader, AppLink, LayoutError }
+})
+export default class Page extends Vue {
+    page!: PageData // Declare the page property and its type.
+
+    async asyncData (context: Context) {
+        const page = await fetch(context.$url.api(`page${context.route.path}`)).then(response => response.json())
+        return { page }
+    }
+
+    head () {
         return {
             title: this.page.title
         }
     }
-})
-export default class Page extends Vue { }
+}
 
 </script>

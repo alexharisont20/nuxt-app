@@ -53,7 +53,7 @@ export default class Footer extends Vue {
     items = []
 
     mounted() {
-        this.items = this.getMenu('quick-links').map((x: Object) => ({ title: x.name, url: x.href }))
+        this.items = this.getMenu('quick-links').map((x: {name: string, href: string}) => ({ title: x.name, url: x.href }))
     }
 }
 

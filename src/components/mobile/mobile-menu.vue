@@ -64,7 +64,7 @@ export default class MobileMenu extends Vue {
                 url: '',
                 children: this.categories
             },
-            ...this.getMenu('header-menu').map(x => ({
+            ...this.getMenu('header-menu').map((x: any) => ({
                 type: 'link',
                 title: x.name,
                 url: x.href

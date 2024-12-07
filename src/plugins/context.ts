@@ -1,3 +1,3 @@
-export default (context) => {
+export default (context: any) => {
     context.store.$context = context
 }
