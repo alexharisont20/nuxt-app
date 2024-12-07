@@ -145,6 +145,14 @@ declare module '@nuxt/types' {
     }
 }
 
+declare module 'vuex' {
+    interface Store<S> {
+        $url: {
+            api: (path: string) => string;
+        };
+    }
+}
+
 const plugin: Plugin = (context, inject) => {
     inject('url', make(context))
 }

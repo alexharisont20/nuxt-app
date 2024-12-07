@@ -6,8 +6,8 @@ import { ILanguage } from '~/interfaces/language'
 
 const envMode = process.env.MODE as NuxtConfig['mode'] || 'universal'
 const envRouterBase = process.env.ROUTER_BASE || '/'
-const envRouterAsset = process.env.ROUTER_ASSET || '/'
-const envRouterApi = process.env.ROUTER_API || '/'
+const envRouterAsset = process.env.ROUTER_ASSET || 'https://www.tcom1.cyber32.net/'
+const envRouterApi = process.env.ROUTER_API || 'https://www.tcom1.cyber32.net/api/'
 
 // noinspection JSUnusedGlobalSymbols
 const config: NuxtConfig = {

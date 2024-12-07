@@ -121,6 +121,7 @@ export const mutations: MutationTree<CartState> = {
             {
                 type: 'shipping',
                 title: 'Shipping',
+                // @ts-ignore
                 price: parseInt(state.shipping === 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
             }
         ] // calcTotals(state.items)
@@ -141,7 +142,8 @@ export const mutations: MutationTree<CartState> = {
             {
                 type: 'shipping',
                 title: 'Shipping',
-                price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
+                // @ts-ignore
+                price: parseInt(state.shipping === 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
             }
         ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
@@ -169,7 +171,8 @@ export const mutations: MutationTree<CartState> = {
                 {
                     type: 'shipping',
                     title: 'Shipping',
-                    price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
+                    // @ts-ignore
+                    price: parseInt(state.shipping === 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
                 }
             ] // calcTotals(state.items)
             state.total = calcTotal(state.subtotal, state.totals)
@@ -181,7 +184,8 @@ export const mutations: MutationTree<CartState> = {
             {
                 type: 'shipping',
                 title: 'Shipping',
-                price: parseInt(state.shipping == 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
+                // @ts-ignore
+                price: parseInt(state.shipping === 'Inside Dhaka' ? this.$setting('delivery_charge').inside_dhaka : this.$setting('delivery_charge').outside_dhaka)
             }
         ] // calcTotals(state.items)
         state.total = calcTotal(state.subtotal, state.totals)
